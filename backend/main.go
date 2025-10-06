@@ -3,7 +3,6 @@ package main
 import (
 	"backend/core"
 	"github.com/labstack/echo/v4/middleware"
-	"os"
 )
 
 type UserClaims struct {
@@ -20,10 +19,8 @@ func main() {
 
 	app.Use(middleware.CORSWithConfig(middleware.DefaultCORSConfig))
 
-	mainRoot := app.Group(os.Getenv("DEV_BASE_URL"))
-
-	mainRoot.GET("/", defaultUrl)
-	mainRoot.GET("/health", healthUrl)
+	app.GET("/", defaultUrl)
+	app.GET("/health", healthUrl)
 
 	app.Logger.Fatal(app.Start("127.0.0.1:8080"))
 }
