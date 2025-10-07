@@ -32,9 +32,12 @@ CREATE TABLE projects
     id              SERIAL PRIMARY KEY,
     owner_id        INT REFERENCES users (id),
     name            VARCHAR(100) NOT NULL,
-    created_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at      TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    active          bool      DEFAULT true,
+    description     TEXT,
+    created_at      TIMESTAMP   DEFAULT CURRENT_TIMESTAMP,
+    updated_at      TIMESTAMP   DEFAULT CURRENT_TIMESTAMP,
+    active          bool        DEFAULT true,
+    visibility      VARCHAR(50) DEFAULT 'private'
+        CONSTRAINT visibility_check CHECK (visibility IN ('private', 'public', 'internal')),
     connection_type INT REFERENCES connection_types (id)
 );
 
@@ -56,18 +59,20 @@ CREATE TABLE version_audit
     id         SERIAL PRIMARY KEY,
     version_id INT REFERENCES versions (id),
     applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    applied_by INT REFERENCES users (id),
     notes      varchar(512)
 );
 
 CREATE TABLE user_role
 (
-    id SERIAL PRIMARY KEY,
-    user_id INT REFERENCES users (id),
+    id         SERIAL PRIMARY KEY,
+    user_id    INT REFERENCES users (id),
     project_id INT REFERENCES projects (id),
-    role varchar(255)
+    role       varchar(255)
 );
 
 INSERT INTO connection_types (type_name, key, description)
 VALUES ('PostgreSQL', 'psql', 'PostgreSQL Database Connection');
 
-INSERT INTO users (first_name, email) VALUES ('Yorck', 'Dombrowsky');
+INSERT INTO users (first_name, email)
+VALUES ('Yorck', 'Dombrowsky');
