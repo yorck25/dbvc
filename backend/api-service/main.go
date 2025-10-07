@@ -22,7 +22,7 @@ func main() {
 	app.GET("/", defaultUrl)
 	app.GET("/health", healthUrl)
 
-	app.Logger.Fatal(app.Start("127.0.0.1:8080"))
+	app.Logger.Fatal(app.Start("0.0.0.0:8080"))
 }
 
 func defaultUrl(ctx *core.WebContext) error {

@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-service
+  labels:
+    app: api-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-service
+  template:
+    metadata:
+      labels:
+        app: api-service
+    spec:
+      containers:
+        - name: api-service
+          image: yorck25/api-service:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: api-service-secrets
+                  key: jwt-secret-key
+            - name: PSQL_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: api-service-secrets
+                  key: psql_host
+            - name: PSQL_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: api-service-secrets
+                  key: psql_port
+            - name: PSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: api-service-secrets
+                  key: psql_user
+            - name: PSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: api-service-secrets
+                  key: psql_password
+            - name: PSQL_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: api-service-secrets
+                  key: psql_database
+      imagePullSecrets:
+        - name: regcred
