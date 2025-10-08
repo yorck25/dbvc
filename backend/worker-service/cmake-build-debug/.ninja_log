@@ -1,3 +1,9 @@
 # ninja log v6
-0	486	1759869983341119058	CMakeFiles/worker_service.dir/main.cpp.o	7cc3e18f554e4969
-487	533	1759869983827712734	worker_service	18bba04f1c3c4979
+6	1408	1759956287238974104	CMakeFiles/worker_service.dir/src/main.cpp.o	c3f05d8833ab1df2
+13	606	1759956144938458615	CMakeFiles/worker_service.dir/src/connectors/BaseConnector.cpp.o	973266a20e2ec208
+3	72	1759956326293224738	build.ninja	a49c3ac3ecfba31f
+3	813	1759954239207473929	CMakeFiles/worker_service.dir/main.cpp.o	7cc3e18f554e4969
+1408	1521	1759956288641379985	worker_service	66bae1e12cdab14f
+9	780	1759952403009237190	CMakeFiles/worker_service.dir/connectors/BaseConnector.cpp.o	4899610be4d7d037
+5	1269	1759956342588337391	CMakeFiles/worker_service.dir/src/main.cpp.o	c3f05d8833ab1df2
+1269	1377	1759956343852491307	worker_service	66bae1e12cdab14f
