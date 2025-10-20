@@ -63,6 +63,27 @@ build CMakeFiles/worker_service.dir/src/connectors/BaseConnector.cpp.o: CXX_COMP
   OBJECT_DIR = CMakeFiles/worker_service.dir
   OBJECT_FILE_DIR = CMakeFiles/worker_service.dir/src/connectors
 
+build CMakeFiles/worker_service.dir/src/connectors/PostgresConnector.cpp.o: CXX_COMPILER__worker_service_unscanned_Debug /Users/yorckdombrowsky/Documents/code/dbvc/backend/worker-service/src/connectors/PostgresConnector.cpp || cmake_object_order_depends_target_worker_service
+  DEP_FILE = CMakeFiles/worker_service.dir/src/connectors/PostgresConnector.cpp.o.d
+  FLAGS = -g -std=gnu++2b -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics
+  INCLUDES = -I/opt/homebrew/Cellar/libpqxx/7.10.3/include -I/opt/homebrew/opt/libpq/include
+  OBJECT_DIR = CMakeFiles/worker_service.dir
+  OBJECT_FILE_DIR = CMakeFiles/worker_service.dir/src/connectors
+
+build CMakeFiles/worker_service.dir/src/utils/projects.cpp.o: CXX_COMPILER__worker_service_unscanned_Debug /Users/yorckdombrowsky/Documents/code/dbvc/backend/worker-service/src/utils/projects.cpp || cmake_object_order_depends_target_worker_service
+  DEP_FILE = CMakeFiles/worker_service.dir/src/utils/projects.cpp.o.d
+  FLAGS = -g -std=gnu++2b -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics
+  INCLUDES = -I/opt/homebrew/Cellar/libpqxx/7.10.3/include -I/opt/homebrew/opt/libpq/include
+  OBJECT_DIR = CMakeFiles/worker_service.dir
+  OBJECT_FILE_DIR = CMakeFiles/worker_service.dir/src/utils
+
+build CMakeFiles/worker_service.dir/src/utils/mapper.cpp.o: CXX_COMPILER__worker_service_unscanned_Debug /Users/yorckdombrowsky/Documents/code/dbvc/backend/worker-service/src/utils/mapper.cpp || cmake_object_order_depends_target_worker_service
+  DEP_FILE = CMakeFiles/worker_service.dir/src/utils/mapper.cpp.o.d
+  FLAGS = -g -std=gnu++2b -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk -fcolor-diagnostics
+  INCLUDES = -I/opt/homebrew/Cellar/libpqxx/7.10.3/include -I/opt/homebrew/opt/libpq/include
+  OBJECT_DIR = CMakeFiles/worker_service.dir
+  OBJECT_FILE_DIR = CMakeFiles/worker_service.dir/src/utils
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target worker_service
@@ -71,7 +92,7 @@ build CMakeFiles/worker_service.dir/src/connectors/BaseConnector.cpp.o: CXX_COMP
 #############################################
 # Link the executable worker_service
 
-build worker_service: CXX_EXECUTABLE_LINKER__worker_service_Debug CMakeFiles/worker_service.dir/src/main.cpp.o CMakeFiles/worker_service.dir/src/connectors/BaseConnector.cpp.o | /opt/homebrew/Cellar/libpqxx/7.10.3/lib/libpqxx.dylib /opt/homebrew/opt/libpq/lib/libpq.dylib
+build worker_service: CXX_EXECUTABLE_LINKER__worker_service_Debug CMakeFiles/worker_service.dir/src/main.cpp.o CMakeFiles/worker_service.dir/src/connectors/BaseConnector.cpp.o CMakeFiles/worker_service.dir/src/connectors/PostgresConnector.cpp.o CMakeFiles/worker_service.dir/src/utils/projects.cpp.o CMakeFiles/worker_service.dir/src/utils/mapper.cpp.o | /opt/homebrew/Cellar/libpqxx/7.10.3/lib/libpqxx.dylib /opt/homebrew/opt/libpq/lib/libpq.dylib
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX15.5.sdk
   LINK_LIBRARIES = /opt/homebrew/Cellar/libpqxx/7.10.3/lib/libpqxx.dylib  /opt/homebrew/opt/libpq/lib/libpq.dylib
   OBJECT_DIR = CMakeFiles/worker_service.dir

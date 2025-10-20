@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1,
+    "ownerId": 1,
+    "name": "Sample Project 1",
+    "description": "This is a sample project 1 for demonstration purposes.",
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updatedAt": "2024-01-20T12:00:00Z",
+    "active": true,
+    "visibility": "public",
+    "connectionType": 2
+  },
+  {
+    "id": 2,
+    "ownerId": 1,
+    "name": "Sample Project 2",
+    "description": "This is a sample project 2 for demonstration purposes.",
+    "createdAt": "2024-01-15T10:00:00Z",
+    "updated_at": "2024-01-20T12:00:00Z",
+    "active": true,
+    "visibility": "public",
+    "connectionType": 2
+  }
+]

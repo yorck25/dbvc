@@ -1,20 +1,11 @@
-#include <iostream>
+#include "Logger.h"
 
-enum LogType {
-    WARNING = 0,
-    INFO = 1,
-    ERROR = 2
-};
+static const char* LogTypes[] = {"Warning", "Info", "Error"};
 
-const char* LogTypes[] = {"Warning", "Info", "Error"};
+void Logger::print(LogType type, const std::string& msg) {
+    std::cout << "[" << LogTypes[static_cast<int>(type)] << "]: " << msg << std::endl;
+}
 
-class Logger {
-public:
-    void print(LogType type = LogType::INFO, const std::string& msg = "") {
-        std::cout << "[" + std::string(LogTypes[type]) + "]: " + msg << std::endl;
-    }
-
-    void print(const std::string& msg) {
-        print(LogType::INFO, msg);
-    }
-};
+void Logger::print(const std::string& msg) {
+    print(LogType::INFO, msg);
+}

@@ -6,7 +6,15 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(worker_service
         src/main.cpp
-        src/connectors/BaseConnector.cpp)
+        src/connectors/BaseConnector.cpp
+        src/connectors/PostgresConnector.cpp
+        src/utils/projects.cpp
+        src/utils/mapper.cpp
+        src/utils/mapper.cpp
+        src/utils/mapper.cpp
+        src/logger/Logger.h
+        src/utils/mapper.h
+        src/utils/projects.h)
 
 # Homebrew libpqxx headers and libraries
 set(PQXX_INCLUDE_DIR /opt/homebrew/Cellar/libpqxx/7.10.3/include)

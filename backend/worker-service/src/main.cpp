@@ -1,57 +1,35 @@
 #include <iostream>
+#include "connectors/PostgresConnector.h"
 #include "connectors/BaseConnector.cpp"
-#include "logger/Logger.cpp"
+#include "logger/Logger.h"
 #include <pqxx/pqxx>
 
-class PostgresConnector : public BaseConnector {
-public:
-    bool tryConnect() override {
-        try {
-            pqxx::connection c{"dbname=postgres user=postgres password=test1234 host=localhost"};
-            pqxx::work txn{c};
+using namespace std;
 
-            pqxx::result r = txn.exec("SELECT version()");
-            std::cout << "PostgreSQL version: " << r[0][0].c_str() << std::endl;
+void processor(const Project& project){
+    cout << "Project = " << project.name << endl;
 
-            txn.commit();
-        } catch (const std::exception &e) {
-            std::cerr << "Error: " << e.what() << std::endl;
-            return 1;
-        }
-        return true;
-    }
-};
-
-class MySQLConnector : public BaseConnector {
-public:
-    bool tryConnect() override {
-        return true;
-    }
-};
-
-std::unique_ptr<BaseConnector> getConnector(const std::string &connectionType) {
-    if (connectionType == "psql") {
-        return std::make_unique<PostgresConnector>();
-    } else if (connectionType == "mysql") {
-        MySQLConnector mysqlConnector;
-        return std::make_unique<MySQLConnector>();
-    }
-
-    return nullptr;
 }
 
 int main() {
     Logger logger;
     logger.print("Start worker.");
 
-    std::unique_ptr<BaseConnector> connector = getConnector("psql");
+    PostgresConnector psqlConnector = PostgresConnector(
+            "localhost", 5432, "postgres", "test1234", "postgres"
+    );
 
-    bool res = connector->connect();
-    if (!res) {
+    if (!psqlConnector.connect()) {
         logger.print(LogType::ERROR, "Fail to connect to db");
         return 1;
     }
     logger.print("Connected to database");
 
+    std::vector<Project> projects = getProjects(&psqlConnector, logger);
+
+    for (const Project& project : projects) {
+        processor(project);
+    }
+
     return 0;
-};
+}
