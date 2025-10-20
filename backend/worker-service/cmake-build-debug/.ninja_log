@@ -1,8 +1,0 @@
-# ninja log v6
-9	780	1759952403009237190	CMakeFiles/worker_service.dir/connectors/BaseConnector.cpp.o	4899610be4d7d037
-1710	1840	1760899202022756173	worker_service	b45ffb245469c032
-3	813	1759954239207473929	CMakeFiles/worker_service.dir/main.cpp.o	7cc3e18f554e4969
-4	144	1760900401803339847	build.ninja	a49c3ac3ecfba31f
-7	1438	1760899793925767211	CMakeFiles/worker_service.dir/src/connectors/PostgresConnector.cpp.o	294eb8c665e7cf2e
-2	780	1760888474861915736	CMakeFiles/worker_service.dir/src/connectors/BaseConnector.cpp.o	973266a20e2ec208
-6	1710	1760899200318254851	CMakeFiles/worker_service.dir/src/main.cpp.o	c3f05d8833ab1df2
