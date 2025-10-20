@@ -2,6 +2,7 @@ package main
 
 import (
 	"backend/core"
+	"backend/projects"
 	"github.com/labstack/echo/v4/middleware"
 )
 
@@ -21,6 +22,15 @@ func main() {
 
 	app.GET("/", defaultUrl)
 	app.GET("/health", healthUrl)
+
+	app.GET("/projects", projects.HandleGetActiveProjects)
+
+	app.GET("/projects", projects.HandleGetAllProjects)
+	app.GET("/projects/active", projects.HandleGetActiveProjects)
+	app.GET("/projects/:id", projects.HandleGetProjectByID)
+	app.POST("/projects", projects.HandleCreateProject)
+	app.PUT("/projects/:id", projects.HandleUpdateProject)
+	app.DELETE("/projects/:id", projects.HandleDeleteProject)
 
 	app.Logger.Fatal(app.Start("0.0.0.0:8080"))
 }

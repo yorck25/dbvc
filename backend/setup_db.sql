@@ -76,3 +76,10 @@ VALUES ('PostgreSQL', 'psql', 'PostgreSQL Database Connection');
 
 INSERT INTO users (first_name, email)
 VALUES ('Yorck', 'Dombrowsky');
+
+INSERT INTO projects (owner_id, name, description, connection_type) values (
+    (SELECT id FROM users WHERE email='Dombrowsky'),
+    'DB Versioning Tool',
+    'A tool to manage database schema versions and migrations.',
+    (SELECT id FROM connection_types WHERE key='psql')
+);
