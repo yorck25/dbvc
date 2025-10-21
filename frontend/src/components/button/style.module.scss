@@ -1,0 +1,99 @@
+.default, .outline, .link, .text {
+  border-radius: 25px;
+
+  font-family: Roboto, Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: .5rem 1rem;
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  text-wrap: nowrap;
+  font-size: 1rem;
+  cursor: pointer;
+  letter-spacing: .05rem;
+  font-weight: 400;
+  height: 2.8rem;
+  min-width: 10rem;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  border: none;
+
+  &:focus {
+    outline: 2px solid #000000;
+  }
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  svg {
+    height: 1rem;
+    aspect-ratio: 1 / 1;
+    fill: #000;
+    margin-right: 7.5px;
+  }
+}
+
+.large {
+  padding: .5rem 1.5rem;
+}
+
+.default {
+  //Color needs to be adjust to the website design
+  background: #e2001a;
+  color: #ffffff;
+}
+
+.dark {
+  background: #000;
+  color: #fff;
+
+  svg {
+    fill: #fff;
+  }
+}
+
+.outline {
+  background: none;
+  color: #000;
+  border: 2px solid #000;
+
+  svg {
+    fill: #000;
+  }
+}
+
+.link {
+  background: none;
+  color: blue;
+  text-decoration: 1px underline solid blue;
+  border: none;
+
+  svg {
+    fill: blue;
+  }
+}
+
+.text {
+  background: none;
+  color: #000;
+  border: none;
+  padding: 0;
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &.dark {
+    color: #fff;
+  }
+
+  svg {
+    fill: #000;
+  }
+}
