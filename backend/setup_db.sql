@@ -71,6 +71,22 @@ CREATE TABLE user_role
     role       varchar(255)
 );
 
+CREATE TABLE releases
+(
+    id          SERIAL PRIMARY KEY,
+    notes       TEXT,
+    project_id  INT REFERENCES projects (id),
+    current_version INT REFERENCES versions (id),
+    created_at TIMESTAMP,
+    created_by INT REFERENCES users (id),
+    approved    bool DEFAULT false,
+    approved_at TIMESTAMP,
+    approved_by INT REFERENCES users (id),
+    released    bool default false,
+    released_at TIMESTAMP,
+    released_by INT REFERENCES users (id)
+);
+
 INSERT INTO connection_types (type_name, key, description)
 VALUES ('PostgreSQL', 'psql', 'PostgreSQL Database Connection');
 
