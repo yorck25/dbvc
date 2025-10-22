@@ -15,6 +15,9 @@ func (m MSSQLConnector) Connect() (*sql.DB, error) {
 }
 
 func (m MSSQLConnector) ExecuteQuery(db *sql.DB, query string) (*sql.Rows, error) {
-	fmt.Println("Executing query on MSSQL...")
 	return db.Query(query)
+}
+
+func (m MSSQLConnector) GetVersionQuery() string {
+	return "SELECT @@VERSION;"
 }

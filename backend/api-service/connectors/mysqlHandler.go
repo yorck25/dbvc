@@ -15,6 +15,9 @@ func (m MySQLConnector) Connect() (*sql.DB, error) {
 }
 
 func (m MySQLConnector) ExecuteQuery(db *sql.DB, query string) (*sql.Rows, error) {
-	fmt.Println("Executing query on MySQL...")
 	return db.Query(query)
+}
+
+func (m MySQLConnector) GetVersionQuery() string {
+	return "SELECT VERSION();"
 }

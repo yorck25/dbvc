@@ -1,10 +1,13 @@
 package connectors
 
-import "database/sql"
+import (
+	"database/sql"
+)
 
 type DBConnector interface {
 	Connect() (*sql.DB, error)
 	ExecuteQuery(db *sql.DB, query string) (*sql.Rows, error)
+	GetVersionQuery() string
 }
 
 type PostgresConnector struct {
