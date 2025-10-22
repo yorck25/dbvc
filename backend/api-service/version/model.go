@@ -1,16 +1,30 @@
 package version
 
-import "time"
+import (
+	"database/sql/driver"
+	"encoding/json"
+	"errors"
+	"time"
+)
 
-type Versions struct {
-	ID        int         `db:"id" json:"id"`
-	Version   string      `db:"version" json:"version"`
-	Up        interface{} `db:"up" json:"up"`     // jsonb -> map or struct
-	Down      interface{} `db:"down" json:"down"` // jsonb -> map or struct
-	State     string      `db:"state" json:"state"`
-	CreatedAt time.Time   `db:"created_at" json:"createdAt"`
-	AppliedAt *time.Time  `db:"applied_at" json:"appliedAt,omitempty"`
-	ProjectID int         `db:"project_id" json:"projectId"`
+type Version struct {
+	Id        int        `db:"id" json:"id"`
+	Version   string     `db:"version" json:"version"`
+	Up        SQLScript  `db:"up" json:"up"`
+	Down      SQLScript  `db:"down" json:"down"`
+	State     string     `db:"state" json:"state"`
+	CreatedAt string     `db:"created_at" json:"createdAt"`
+	AppliedAt *time.Time `db:"applied_at" json:"appliedAt"`
+	ProjectId int        `db:"project_id" json:"projectId"`
+}
+
+type SQLScript struct {
+	ID     int    `json:"id"`
+	Script string `json:"script"`
+}
+
+func (s SQLScript) Value() (driver.Value, error) {
+	return json.Marshal(s)
 }
 
 type VersionAudit struct {
@@ -19,4 +33,13 @@ type VersionAudit struct {
 	AppliedAt time.Time `db:"applied_at" json:"appliedAt"`
 	AppliedBy int       `db:"applied_by" json:"appliedBy"`
 	Notes     string    `db:"notes" json:"notes"`
+}
+
+func (s *SQLScript) Scan(value interface{}) error {
+	b, ok := value.([]byte)
+	if !ok {
+		return errors.New("type assertion to []byte failed")
+	}
+
+	return json.Unmarshal(b, s)
 }
