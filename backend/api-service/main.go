@@ -3,6 +3,7 @@ package main
 import (
 	"backend/core"
 	"backend/projects"
+	"backend/release"
 	"backend/worker"
 	"github.com/labstack/echo/v4/middleware"
 )
@@ -30,6 +31,9 @@ func main() {
 	app.POST("/projects", projects.HandleCreateProject)
 	app.PUT("/projects/:id", projects.HandleUpdateProject)
 	app.DELETE("/projects/:id", projects.HandleDeleteProject)
+
+	app.GET("/release/project/all", release.HandleGetReleasesForProject)
+	app.GET("/release/project/latest", release.HandleGetReleasesForProject)
 
 	app.GET("/upgrade", worker.HandleUpgrade)
 

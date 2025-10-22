@@ -2,7 +2,7 @@ package release
 
 import "time"
 
-type Releases struct {
+type Release struct {
 	ID             int        `db:"id" json:"id"`
 	Notes          string     `db:"notes" json:"notes"`
 	ProjectID      int        `db:"project_id" json:"projectId"`

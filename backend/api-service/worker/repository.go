@@ -54,8 +54,8 @@ func (r *Repository) GetConnectionTypeObject(id int) (ConnectionType, error) {
 	return connectionType, err
 }
 
-func (r *Repository) GetVersionsSinceLatestRelease(projectId int, latestVersionId int) ([]version.Versions, error) {
-	var versions []version.Versions
+func (r *Repository) GetVersionsSinceLatestRelease(projectId int, latestVersionId int) ([]version.Version, error) {
+	var versions []version.Version
 
 	stmt, err := r.db.PrepareNamed("SELECT * FROM versions WHERE project_id = :projectId AND id > :versionId ORDER BY id")
 	if err != nil {
