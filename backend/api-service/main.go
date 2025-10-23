@@ -4,7 +4,9 @@ import (
 	"backend/core"
 	"backend/projects"
 	"backend/release"
+	"backend/version"
 	"backend/worker"
+
 	"github.com/labstack/echo/v4/middleware"
 )
 
@@ -34,6 +36,8 @@ func main() {
 
 	app.GET("/release/project/all", release.HandleGetReleasesForProject)
 	app.GET("/release/project/latest", release.HandleGetReleasesForProject)
+
+	app.POST("/version/table/create", version.HandleCreateTable)
 
 	app.GET("/upgrade", worker.HandleUpgrade)
 

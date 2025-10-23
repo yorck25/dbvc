@@ -7,6 +7,20 @@ import (
 	"time"
 )
 
+type CreateTableRequest struct {
+	ProjectID int                   `json:"projectId"`
+	TableName string                `json:"tableName"`
+	Columns   []CreateColumnRequest `json:"columns"`
+}
+
+type CreateColumnRequest struct {
+	Name       string `json:"name"`
+	Type       string `json:"type"`
+	Nullable   bool   `json:"nullable"`
+	PrimaryKey bool   `json:"primaryKey"`
+	Default    string `json:"default,omitempty"`
+}
+
 type Version struct {
 	Id        int        `db:"id" json:"id"`
 	Version   string     `db:"version" json:"version"`

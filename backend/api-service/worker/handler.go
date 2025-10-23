@@ -3,6 +3,7 @@ package worker
 import (
 	"backend/connectors"
 	"backend/core"
+	"backend/release"
 	"database/sql"
 	"fmt"
 	"strconv"
@@ -35,7 +36,13 @@ func Upgrade(ctx *core.WebContext, id int) error {
 		return err
 	}
 
-	versionsSinceLatestRelease, err := repo.GetVersionsSinceLatestRelease(project.ID, 0)
+	releaseRepo := release.NewRepository(ctx)
+	release, err := releaseRepo.GetLatestReleasesForProject(project.ID)
+	if err != nil {
+		return err
+	}
+
+	versionsSinceLatestRelease, err := repo.GetVersionsSinceLatestRelease(project.ID, release.CurrentVersion)
 	if err != nil {
 		return err
 	}
