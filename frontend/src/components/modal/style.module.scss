@@ -27,6 +27,20 @@
     width: 100%;
     text-wrap: wrap;
   }
+
+  .footer {
+    margin-top: 1.5rem;
+
+    .buttonGroup {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+
+      button {
+        flex: 1;
+      }
+    }
+  }
 }
 
 .popup.show {
