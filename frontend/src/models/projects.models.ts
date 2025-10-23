@@ -8,12 +8,14 @@ export interface IProjectRequest {
     connectionType: number;
 }
 
-export interface IProjects {
+export interface Project {
     id: number;
     ownerId: number;
     name: string;
-    createdAt: Date;
-    updatedAt: Date;
+    description: string;
+    createdAt: string;
+    updatedAt: string;
     active: boolean;
+    visibility: string;
     connectionType: number;
 }

@@ -1,4 +1,5 @@
 import {createContext, useContext, useEffect, useState, type Dispatch, type FC, type ReactNode} from 'react';
+import type { Project } from '../models/projects.models';
 
 interface IProjectContext {
     projects: any;
@@ -8,11 +9,20 @@ interface IProjectContext {
 const ProjectContext = createContext<IProjectContext | undefined>(undefined);
 
 export const ProjectContextProvider: FC<{ children: ReactNode }> = ({children}) => {
-    const [projects, setProjects] = useState<any>();
+    const [projects, setProjects] = useState<Project[]>();
 
     useEffect(() => {
-        console.log("");
+        console.log("projects context");
+        fetchProjects();
     }, []);
+
+    const fetchProjects = () => {
+        fetch('http://localhost:8080/projects')
+            .then(res => res.json())
+            .then((data: Project[]) => {
+                setProjects(data);
+            });
+    }
 
     const appContextValue: IProjectContext = {
         projects,

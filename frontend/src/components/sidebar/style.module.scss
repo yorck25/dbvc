@@ -1,2 +1,18 @@
+$secondary-background: #f1f1f1;
+
 .sidebar {
+  width: 30vw;
+  background-color: $secondary-background;
+
+  ul {
+    margin: 0;
+    list-style: none;
+
+    li {
+      a {
+        color: black;
+        text-decoration: none;
+      }
+    }
+  }
 }
