@@ -29,10 +29,10 @@ func HandleGetLatestReleasesForProject(ctx *core.WebContext) error {
 
 	repo := NewRepository(ctx)
 
-	releases, err := repo.GetReleasesForProject(projectId)
+	release, err := repo.GetLatestReleasesForProject(projectId)
 	if err != nil {
 		return ctx.InternalError("Failed to get releases: " + err.Error())
 	}
 
-	return ctx.Sucsess(releases)
+	return ctx.Sucsess(release)
 }
