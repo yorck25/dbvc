@@ -4,6 +4,7 @@ go 1.24.2
 
 require (
 	github.com/denisenkom/go-mssqldb v0.12.3
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-sql-driver/mysql v1.9.3
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/joho/godotenv v1.5.1

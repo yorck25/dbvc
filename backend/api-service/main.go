@@ -4,6 +4,7 @@ import (
 	"backend/core"
 	"backend/projects"
 	"backend/release"
+	"backend/user"
 	"backend/version"
 	"backend/worker"
 
@@ -27,6 +28,9 @@ func main() {
 	app.GET("/", defaultUrl)
 	app.GET("/health", healthUrl)
 
+	app.POST("/auth/login", user.HandleLogin)
+	app.POST("/auth/register", user.HandleRegister)
+
 	app.GET("/projects", projects.HandleGetAllProjects)
 	app.GET("/projects/active", projects.HandleGetActiveProjects)
 	app.GET("/projects/:id", projects.HandleGetProjectByID)
@@ -35,7 +39,7 @@ func main() {
 	app.DELETE("/projects/:id", projects.HandleDeleteProject)
 
 	app.GET("/release/project/all", release.HandleGetReleasesForProject)
-	app.GET("/release/project/latest", release.HandleGetReleasesForProject)
+	app.GET("/release/project/latest", release.HandleGetLatestReleasesForProject)
 
 	app.POST("/version/table/create", version.HandleCreateTable)
 

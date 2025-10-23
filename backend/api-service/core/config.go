@@ -1,66 +1,56 @@
 package core
 
 import (
+	"backend/common"
 	"errors"
+	"github.com/joho/godotenv"
 	"os"
 	"strconv"
-
-	"github.com/joho/godotenv"
 )
 
-type Config struct {
-	JwtSecretkey []byte
-
-	psqlHost     string
-	psqlPort     int
-	psqlUser     string
-	psqlPassword string
-	psqlDatabase string
-}
-
-func LoadConfig() (*Config, error) {
+func LoadConfig() (*common.Config, error) {
 	err := godotenv.Load()
 	if err != nil {
 		return nil, err
 	}
 
-	config := &Config{}
+	config := &common.Config{}
 
 	key := os.Getenv("SECRET_KEY")
 	if key == "" {
 		return nil, errors.New("no secret key")
 	}
-	config.JwtSecretkey = []byte(key)
+	config.JwtSecretKey = []byte(key)
 
 	psqlHost := os.Getenv("PSQL_HOST")
 	if psqlHost == "" {
 		return nil, errors.New("no psql host")
 	}
-	config.psqlHost = psqlHost
+	config.PsqlHost = psqlHost
 
 	psqlPort, err := strconv.Atoi(os.Getenv("PSQL_PORT"))
 	if err != nil {
 		return nil, errors.New("no psql port")
 	}
-	config.psqlPort = psqlPort
+	config.PsqlPort = psqlPort
 
 	psqlUser := os.Getenv("PSQL_USER")
 	if psqlUser == "" {
 		return nil, errors.New("no psql user")
 	}
-	config.psqlUser = psqlUser
+	config.PsqlUser = psqlUser
 
 	psqlPassword := os.Getenv("PSQL_PASSWORD")
 	if psqlPassword == "" {
 		return nil, errors.New("no psql password")
 	}
-	config.psqlPassword = psqlPassword
+	config.PsqlPassword = psqlPassword
 
 	psqlDatabase := os.Getenv("PSQL_DATABASE")
 	if psqlDatabase == "" {
 		return nil, errors.New("no psql database")
 	}
-	config.psqlDatabase = psqlDatabase
+	config.PsqlDatabase = psqlDatabase
 
 	return config, nil
 }

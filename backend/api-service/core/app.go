@@ -28,7 +28,7 @@ func InitApp() (*App, error) {
 
 	connStr := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		config.psqlHost, strconv.Itoa(config.psqlPort), config.psqlUser, config.psqlPassword, config.psqlDatabase,
+		config.PsqlHost, strconv.Itoa(config.PsqlPort), config.PsqlUser, config.PsqlPassword, config.PsqlDatabase,
 	)
 
 	db, err := sqlx.Connect("postgres", connStr)

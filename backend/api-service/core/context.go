@@ -1,9 +1,13 @@
 package core
 
 import (
+	"backend/auth"
+	"backend/common"
+	"errors"
 	"github.com/jmoiron/sqlx"
 	"github.com/labstack/echo/v4"
 	"net/http"
+	"strings"
 )
 
 type WebContext struct {
@@ -13,19 +17,39 @@ type WebContext struct {
 
 type Context interface {
 	GetDb() *sqlx.DB
-	GetConfig() *Config
+	GetConfig() *common.Config
+	GetUserID() int
 }
 
 type AppContext struct {
-	config *Config
+	config *common.Config
 	db     *sqlx.DB
+}
+
+func (c *WebContext) GetUserId() int {
+	authHeader := c.Request().Header.Get("Authorization")
+	if !strings.HasPrefix(authHeader, "Bearer ") {
+		c.BadRequest(errors.New("no Bearer token found in Authorization header").Error())
+
+		return 0
+	}
+
+	tokenString := strings.TrimPrefix(authHeader, "Bearer ")
+
+	userId, err := auth.DecodeToken(tokenString, c.config.JwtSecretKey)
+	if err != nil {
+		c.Unauthorized(err.Error())
+		return 0
+	}
+
+	return userId
 }
 
 func (ac *AppContext) GetDb() *sqlx.DB {
 	return ac.db
 }
 
-func (ac *AppContext) GetConfig() *Config {
+func (ac *AppContext) GetConfig() *common.Config {
 	return ac.config
 }
 

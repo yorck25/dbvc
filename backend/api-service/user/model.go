@@ -2,26 +2,54 @@ package user
 
 import "time"
 
-type Users struct {
-	ID        int       `db:"id" json:"id"`
-	FirstName string    `db:"first_name" json:"firstName"`
-	Email     string    `db:"email" json:"email"`
-	CreatedAt time.Time `db:"created_at" json:"createdAt"`
-	UpdatedAt time.Time `db:"updated_at" json:"updatedAt"`
-	Active    bool      `db:"active" json:"active"`
-}
-
-type UserRole struct {
-	ID        int    `db:"id" json:"id"`
-	UserID    int    `db:"user_id" json:"userId"`
-	ProjectID int    `db:"project_id" json:"projectId"`
-	Role      string `db:"role" json:"role"`
+type User struct {
+	ID        int       `json:"id" db:"id"`
+	FirstName *string   `json:"firstName" db:"first_name"`
+	Email     string    `json:"email" db:"email"`
+	CreatedAt time.Time `json:"createdAt" db:"created_at"`
+	UpdatedAt time.Time `json:"updatedAt" db:"updated_at"`
+	Active    bool      `json:"active" db:"active"`
 }
 
 type UserLogin struct {
-	UserID         int        `db:"user_id" json:"userId"`
-	Username       string     `db:"username" json:"username"`
-	PasswordHash   string     `db:"password_hash" json:"passwordHash"`
-	LastLoginAt    *time.Time `db:"last_login_at" json:"lastLoginAt,omitempty"`
-	FailedAttempts int        `db:"failed_attempts" json:"failedAttempts"`
+	UserID         int        `json:"userId" db:"user_id"`
+	Username       string     `json:"username" db:"username"`
+	PasswordHash   string     `json:"-" db:"password_hash"`
+	LastLoginAt    *time.Time `json:"lastLoginAt" db:"last_login_at"`
+	FailedAttempts int        `json:"failedAttempts" db:"failed_attempts"`
+}
+
+type RegisterRequest struct {
+	FirstName string `json:"firstName" db:"first_name" binding:"required"`
+	Email     string `json:"email" db:"email" binding:"required,email"`
+	Username  string `json:"username" db:"username" binding:"required,min=3,max=50"`
+	Password  string `json:"password" db:"password" binding:"required,min=8"`
+}
+
+type LoginRequest struct {
+	Username string `json:"username" db:"username" binding:"required"`
+	Password string `json:"password" db:"password" binding:"required"`
+}
+
+type ChangePasswordRequest struct {
+	OldPassword string `json:"oldPassword" db:"old_password" binding:"required"`
+	NewPassword string `json:"newPassword" db:"new_password" binding:"required,min=8"`
+}
+
+type ResetPasswordRequest struct {
+	Email string `json:"email" db:"email" binding:"required,email"`
+}
+
+type UpdateProfileRequest struct {
+	FirstName *string `json:"firstName" db:"first_name"`
+	Email     *string `json:"email" db:"email" binding:"omitempty,email"`
+}
+
+type AuthResponse struct {
+	Token string `json:"token" db:"token"`
+	User  User   `json:"user" db:"user"`
+}
+
+type MessageResponse struct {
+	Message string `json:"message" db:"message"`
 }
