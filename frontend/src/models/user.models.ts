@@ -7,6 +7,11 @@ export interface IRegisterRequest {
     termsAccepted: boolean;
 }
 
+export interface ILoginRequest {
+    username: string;
+    password: string;
+}
+
 export interface IUser {
     id: number;
     firstName: string;

@@ -1,0 +1,123 @@
+@use "../../styles/mixins";
+@use "../../styles/variables";
+
+.login_page {
+  @include mixins.base-page-style;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100vw;
+  background: variables.$secondary-background;
+  padding: variables.$spacing-lg;
+
+  .login_container {
+    background: variables.$white;
+    border-radius: variables.$border-radius-large;
+    box-shadow: variables.$shadow-medium;
+    width: 100%;
+    max-width: 740px;
+    overflow: hidden;
+
+    .login_header {
+      padding: variables.$spacing-xl variables.$spacing-lg;
+      border-bottom: 1px solid variables.$border-color;
+
+      h1 {
+        font-size: 28px;
+        font-weight: 500;
+        color: variables.$primary-font-color;
+        margin: 0 0 variables.$spacing-sm 0;
+      }
+
+      p {
+        font-size: 14px;
+        color: variables.$muted-font-color;
+        margin: 0;
+      }
+    }
+
+    .error_msg {
+      margin-top: variables.$spacing-lg;
+      padding: 0 variables.$spacing-lg;
+      color: variables.$red;
+
+      p {
+        margin: 0;
+      }
+    }
+
+    .login_form {
+      padding: variables.$spacing-xl variables.$spacing-lg;
+      display: flex;
+      flex-direction: column;
+      gap: variables.$spacing-lg;
+
+      .form_row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: variables.$spacing-md;
+        @media (max-width: 640px) {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .form_group {
+        display: flex;
+        flex-direction: column;
+        gap: variables.$spacing-sm;
+
+        label {
+          font-size: 14px;
+          font-weight: 500;
+          color: variables.$secondary-font-color;
+        }
+
+        input, select {
+          width: 90%;
+          padding: 12px variables.$spacing-md;
+          border: 1px solid variables.$border-color;
+          border-radius: variables.$border-radius-medium;
+          font-size: 14px;
+          font-family: variables.$primary-font-family;
+          color: variables.$primary-font-color;
+          background: variables.$white;
+          transition: all variables.$transition-fast;
+
+          &::placeholder {
+            color: variables.$placeholder-font-color;
+          }
+
+          &:focus {
+            outline: none;
+            border-color: variables.$highlight-blue;
+            box-shadow: 0 0 0 3px rgba(12, 140, 233, 0.1);
+          }
+
+          &:disabled {
+            background: variables.$gray-100;
+            cursor: not-allowed;
+          }
+        }
+
+        select {
+          appearance: none;
+          background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23777777' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+          background-repeat: no-repeat;
+          background-position: right variables.$spacing-md center;
+          padding-right: variables.$spacing-xl;
+          cursor: pointer;
+        }
+      }
+
+      .form_actions {
+        display: flex;
+        gap: variables.$spacing-md;
+        margin-top: variables.$spacing-md;
+        @media (max-width: 640px) {
+          flex-direction: column;
+        }
+      }
+    }
+  }
+}

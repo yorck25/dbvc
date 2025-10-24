@@ -7,7 +7,7 @@ import {
     type FC,
     type ReactNode,
 } from "react";
-import type {IRegisterRequest, IUser} from "../models/user.models.ts";
+import type {ILoginRequest, IRegisterRequest, IUser} from "../models/user.models.ts";
 
 import {HTTPMethods} from "../lib/HTTPMethods.tsx";
 
@@ -22,6 +22,7 @@ interface IAppContext {
     setToken: Dispatch<string | undefined>;
 
     registerRequest: (rr: IRegisterRequest) => Promise<boolean>;
+    loginRequest: (lr: ILoginRequest) => Promise<boolean>;
 }
 
 const AppContext = createContext<IAppContext | undefined>(undefined);
@@ -71,6 +72,40 @@ export const AppContextProvider: FC<{ children: ReactNode }> = ({
         }
     };
 
+    const loginRequest = async (lr: ILoginRequest): Promise<boolean> => {
+        try {
+            const myHeaders = new Headers();
+            myHeaders.append("Content-Type", "application/json");
+
+            const requestOptions: RequestInit = {
+                method: HTTPMethods.POST,
+                headers: myHeaders,
+                redirect: 'follow',
+                body: JSON.stringify(lr),
+            };
+
+            const response = await fetch("http://localhost:8080/auth/login", requestOptions);
+
+            if (!response.ok) {
+                console.error(new Error("Network response was not ok"));
+                return false;
+            }
+
+            const result: { token: string, user: IUser } = await response.json();
+
+            setUser(result.user);
+            setToken(result.token);
+            setIsLoggedIn(true);
+            saveTokenInStorage(result.token);
+
+            return true;
+
+        } catch (error) {
+            console.error("Fetch error:", error);
+            return false;
+        }
+    }
+
 
     const saveTokenInStorage = (token: string) => {
         localStorage.setItem("authToken", token);
@@ -84,6 +119,7 @@ export const AppContextProvider: FC<{ children: ReactNode }> = ({
         token,
         setToken,
         registerRequest,
+        loginRequest,
     };
 
     return (
