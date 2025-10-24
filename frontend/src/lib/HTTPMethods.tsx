@@ -1,5 +1,4 @@
-// @ts-ignore
-export enum HTTPMethods {
+export const enum HTTPMethods {
     POST = 'POST',
     GET = 'GET',
     PUT = 'PUT',

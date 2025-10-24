@@ -1,8 +1,7 @@
 import React from "react";
 import styles from './style.module.scss';
 
-// @ts-ignore
-export enum ButtonType {
+export const enum ButtonType {
     Default = 'default',
     Outline = 'outline',
     Link = 'link',
