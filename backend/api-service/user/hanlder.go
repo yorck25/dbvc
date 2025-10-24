@@ -37,12 +37,7 @@ func HandleRegister(ctx *core.WebContext) error {
 		return ctx.InternalError("failed to hash password")
 	}
 
-	var firstName *string
-	if req.FirstName != "" {
-		firstName = &req.FirstName
-	}
-
-	user, err := repo.CreateUser(firstName, req.Email)
+	user, err := repo.CreateUser(req.FirstName, req.LastName, req.Email, req.TermsAccepted)
 	if err != nil {
 		fmt.Println(err)
 		return ctx.InternalError("failed to create user")
@@ -147,7 +142,7 @@ func HandleUpdateProfile(ctx *core.WebContext) error {
 		}
 	}
 
-	user, err := repo.UpdateUser(userID, req.FirstName, req.Email)
+	user, err := repo.UpdateUser(userID, req.FirstName, req.LastName, req.Email)
 	if err != nil {
 		return ctx.InternalError("failed to update profile")
 	}

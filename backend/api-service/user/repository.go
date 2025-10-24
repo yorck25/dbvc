@@ -15,11 +15,11 @@ func NewRepository(ctx *core.WebContext) *Repository {
 	return &Repository{db: ctx.GetDb()}
 }
 
-func (r *Repository) CreateUser(firstName *string, email string) (*User, error) {
+func (r *Repository) CreateUser(firstName string, lastName string, email string, termsAccepted bool) (*User, error) {
 	query := `
-        INSERT INTO users (first_name, email)
-        VALUES (:first_name, :email)
-        RETURNING id, first_name, email, created_at, updated_at, active`
+        INSERT INTO users (first_name, last_name, email, terms_accepted)
+        VALUES (:first_name, :last_name, :email, :terms_accepted)
+        RETURNING id, first_name, last_name , email, created_at, updated_at, active, terms_accepted`
 
 	stmt, err := r.db.PrepareNamed(query)
 	if err != nil {
@@ -30,8 +30,10 @@ func (r *Repository) CreateUser(firstName *string, email string) (*User, error) 
 	user := &User{}
 
 	params := map[string]any{
-		"first_name": firstName,
-		"email":      email,
+		"first_name":     firstName,
+		"last_name":      lastName,
+		"email":          email,
+		"terms_accepted": termsAccepted,
 	}
 
 	err = stmt.Get(user, params)
@@ -67,7 +69,7 @@ func (r *Repository) CreateUserLogin(userID int, username, passwordHash string) 
 
 func (r *Repository) GetUserByEmail(email string) (*User, error) {
 	query := `
-        SELECT id, first_name, email, created_at, updated_at, active
+        SELECT id, first_name, last_name, email, created_at, updated_at, active, terms_accepted
         FROM users
         WHERE email = :email`
 
@@ -89,7 +91,7 @@ func (r *Repository) GetUserByEmail(email string) (*User, error) {
 
 func (r *Repository) GetUserByID(id int) (*User, error) {
 	query := `
-        SELECT id, first_name, email, created_at, updated_at, active
+        SELECT id, first_name, last_name, email, created_at, updated_at, active, terms_accepted
         FROM users
         WHERE id = :id`
 
@@ -209,7 +211,7 @@ func (r *Repository) UpdatePassword(userID int, passwordHash string) error {
 	return err
 }
 
-func (r *Repository) UpdateUser(userID int, firstName *string, email *string) (*User, error) {
+func (r *Repository) UpdateUser(userID int, firstName *string, lastName *string, email *string) (*User, error) {
 	query := `
         UPDATE users 
         SET updated_at = :updated_at`
@@ -224,12 +226,17 @@ func (r *Repository) UpdateUser(userID int, firstName *string, email *string) (*
 		params["first_name"] = firstName
 	}
 
+	if lastName != nil {
+		query += `, last_name = :lastName`
+		params["lastName"] = lastName
+	}
+
 	if email != nil {
 		query += `, email = :email`
 		params["email"] = email
 	}
 
-	query += ` WHERE id = :user_id RETURNING id, first_name, email, created_at, updated_at, active`
+	query += ` WHERE id = :user_id RETURNING id, first_name, last_name, email, created_at, updated_at, active, terms_accepted`
 
 	stmt, err := r.db.PrepareNamed(query)
 	if err != nil {

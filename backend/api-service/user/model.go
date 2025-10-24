@@ -3,12 +3,14 @@ package user
 import "time"
 
 type User struct {
-	ID        int       `json:"id" db:"id"`
-	FirstName *string   `json:"firstName" db:"first_name"`
-	Email     string    `json:"email" db:"email"`
-	CreatedAt time.Time `json:"createdAt" db:"created_at"`
-	UpdatedAt time.Time `json:"updatedAt" db:"updated_at"`
-	Active    bool      `json:"active" db:"active"`
+	ID            int       `json:"id" db:"id"`
+	FirstName     string    `json:"firstName" db:"first_name"`
+	LastName      string    `json:"lastName" db:"last_name"`
+	Email         string    `json:"email" db:"email"`
+	CreatedAt     time.Time `json:"createdAt" db:"created_at"`
+	UpdatedAt     time.Time `json:"updatedAt" db:"updated_at"`
+	Active        bool      `json:"active" db:"active"`
+	TermsAccepted bool      `json:"termsAccepted" db:"terms_accepted"`
 }
 
 type UserLogin struct {
@@ -20,10 +22,12 @@ type UserLogin struct {
 }
 
 type RegisterRequest struct {
-	FirstName string `json:"firstName" db:"first_name" binding:"required"`
-	Email     string `json:"email" db:"email" binding:"required,email"`
-	Username  string `json:"username" db:"username" binding:"required,min=3,max=50"`
-	Password  string `json:"password" db:"password" binding:"required,min=8"`
+	FirstName     string `json:"firstName" db:"first_name" binding:"required"`
+	LastName      string `json:"lastName" db:"last_name" binding:"required"`
+	Email         string `json:"email" db:"email" binding:"required,email"`
+	Username      string `json:"username" db:"username" binding:"required,min=3,max=50"`
+	Password      string `json:"password" db:"password" binding:"required,min=8"`
+	TermsAccepted bool   `json:"termsAccepted" db:"terms_accepted"`
 }
 
 type LoginRequest struct {
@@ -42,6 +46,7 @@ type ResetPasswordRequest struct {
 
 type UpdateProfileRequest struct {
 	FirstName *string `json:"firstName" db:"first_name"`
+	LastName  *string `json:"lastName" db:"last_name"`
 	Email     *string `json:"email" db:"email" binding:"omitempty,email"`
 }
 

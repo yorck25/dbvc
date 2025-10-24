@@ -2,10 +2,12 @@ CREATE TABLE users
 (
     id         SERIAL PRIMARY KEY,
     first_name VARCHAR(128),
+    last_name VARCHAR(255),
     email      VARCHAR(128) UNIQUE NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    active     bool      DEFAULT true
+    active     bool      DEFAULT true,
+    terms_accepted bool DEFAULT false
 );
 
 CREATE TABLE user_login
