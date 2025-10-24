@@ -1,0 +1,185 @@
+@use "../../styles/mixins";
+@use "../../styles/variables";
+
+.register_page {
+  @include mixins.base-page-style;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100vw;
+  background: variables.$secondary-background;
+  padding: variables.$spacing-lg;
+
+  .register_container {
+    background: variables.$white;
+    border-radius: variables.$border-radius-large;
+    box-shadow: variables.$shadow-medium;
+    width: 100%;
+    max-width: 740px;
+    overflow: hidden;
+
+    .register_header {
+      padding: variables.$spacing-xl variables.$spacing-lg;
+      border-bottom: 1px solid variables.$border-color;
+
+      h1 {
+        font-size: 28px;
+        font-weight: 500;
+        color: variables.$primary-font-color;
+        margin: 0 0 variables.$spacing-sm 0;
+      }
+
+      p {
+        font-size: 14px;
+        color: variables.$muted-font-color;
+        margin: 0;
+      }
+    }
+
+    .register_form {
+      padding: variables.$spacing-xl variables.$spacing-lg;
+      display: flex;
+      flex-direction: column;
+      gap: variables.$spacing-lg;
+
+      .form_row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: variables.$spacing-md;
+        @media (max-width: 640px) {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .form_group {
+        display: flex;
+        flex-direction: column;
+        gap: variables.$spacing-sm;
+
+        label {
+          font-size: 14px;
+          font-weight: 500;
+          color: variables.$secondary-font-color;
+        }
+
+        input, select {
+          width: 90%;
+          padding: 12px variables.$spacing-md;
+          border: 1px solid variables.$border-color;
+          border-radius: variables.$border-radius-medium;
+          font-size: 14px;
+          font-family: variables.$primary-font-family;
+          color: variables.$primary-font-color;
+          background: variables.$white;
+          transition: all variables.$transition-fast;
+
+          &::placeholder {
+            color: variables.$placeholder-font-color;
+          }
+
+          &:focus {
+            outline: none;
+            border-color: variables.$highlight-blue;
+            box-shadow: 0 0 0 3px rgba(12, 140, 233, 0.1);
+          }
+
+          &:disabled {
+            background: variables.$gray-100;
+            cursor: not-allowed;
+          }
+        }
+
+        select {
+          appearance: none;
+          background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23777777' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+          background-repeat: no-repeat;
+          background-position: right variables.$spacing-md center;
+          padding-right: variables.$spacing-xl;
+          cursor: pointer;
+        }
+      }
+
+      .checkbox_group {
+        display: flex;
+        align-items: center;
+        gap: variables.$spacing-sm;
+
+        input[type="checkbox"] {
+          width: 18px;
+          height: 18px;
+          cursor: pointer;
+          accent-color: variables.$highlight-blue;
+        }
+
+        label {
+          font-size: 14px;
+          color: variables.$secondary-font-color;
+          cursor: pointer;
+          margin: 0;
+        }
+      }
+
+      .form_actions {
+        display: flex;
+        gap: variables.$spacing-md;
+        margin-top: variables.$spacing-md;
+        @media (max-width: 640px) {
+          flex-direction: column;
+        }
+
+        .btn_primary {
+          flex: 1;
+          padding: 14px variables.$spacing-lg;
+          background: variables.$highlight-blue;
+          color: variables.$white;
+          border: none;
+          border-radius: variables.$border-radius-medium;
+          font-size: 15px;
+          font-weight: 500;
+          font-family: variables.$primary-font-family;
+          cursor: pointer;
+          transition: all variables.$transition-fast;
+
+          &:hover {
+            background: darken(#0c8ce9, 8%);
+            transform: translateY(-1px);
+            box-shadow: variables.$shadow-medium;
+          }
+
+          &:active {
+            transform: translateY(0);
+          }
+
+          &:disabled {
+            background: variables.$gray-400;
+            cursor: not-allowed;
+            transform: none;
+          }
+        }
+
+        .btn_secondary {
+          flex: 1;
+          padding: 14px variables.$spacing-lg;
+          background: variables.$white;
+          color: variables.$highlight-blue;
+          border: 1px solid variables.$highlight-blue;
+          border-radius: variables.$border-radius-medium;
+          font-size: 15px;
+          font-weight: 500;
+          font-family: variables.$primary-font-family;
+          cursor: pointer;
+          transition: all variables.$transition-fast;
+
+          &:hover {
+            background: variables.$gray-100;
+          }
+
+          &:active {
+            transform: scale(0.98);
+          }
+        }
+      }
+    }
+  }
+}
