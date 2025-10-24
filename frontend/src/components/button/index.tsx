@@ -1,6 +1,7 @@
 import React from "react";
 import styles from './style.module.scss';
 
+// @ts-ignore
 export enum ButtonType {
     Default = 'default',
     Outline = 'outline',
@@ -18,6 +19,7 @@ interface Props {
     large?: boolean;
     dark?: boolean;
     disabled?: boolean;
+    isLoading?: boolean;
 }
 
 export const Button = (
@@ -31,6 +33,7 @@ export const Button = (
         large,
         dark = false,
         disabled = false,
+        isLoading = false,
     }: Props) => {
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -45,8 +48,16 @@ export const Button = (
             onClick={handleClick}
             className={`${styles[type]} ${large ? styles.large : ''} ${dark ? styles.dark : ''}`}
         >
-            {icon && icon}
-            <span>{text}</span>
+            {isLoading ? (
+                <span className={styles.loader}></span>
+            ) : (
+                <>
+                    {icon && icon}
+                    <span>{text}</span>
+                </>
+            )}
+
         </button>
-    );
+    )
+        ;
 };
