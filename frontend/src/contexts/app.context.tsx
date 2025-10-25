@@ -9,7 +9,7 @@ import {
 } from "react";
 import type {ILoginRequest, IRegisterRequest, IUser} from "../models/user.models.ts";
 
-import {NetworkAdapter, saveTokenInStorage, setAuthHeader} from "../lib/networkAdapter.tsx";
+import {NetworkAdapter, removeTokenFromStorage, saveTokenInStorage, setAuthHeader} from "../lib/networkAdapter.tsx";
 
 interface IAppContext {
     user: IUser | undefined;
@@ -24,6 +24,7 @@ interface IAppContext {
     registerRequest: (rr: IRegisterRequest) => Promise<boolean>;
     loginRequest: (lr: ILoginRequest) => Promise<boolean>;
     checkUserLogin: () => boolean;
+    logout: () => boolean;
 }
 
 const AppContext = createContext<IAppContext | undefined>(undefined);
@@ -162,6 +163,19 @@ export const AppContextProvider: FC<{ children: ReactNode }> = ({
         }
     }
 
+    const logout = (): boolean => {
+        try {
+            setUser(undefined);
+            setToken(undefined);
+            setIsLoggedIn(false);
+            removeTokenFromStorage();
+            return true;
+        } catch (e) {
+            console.error("Logout error:", e);
+            return false;
+        }
+    };
+
     const appContextValue: IAppContext = {
         user,
         setUser,
@@ -175,6 +189,7 @@ export const AppContextProvider: FC<{ children: ReactNode }> = ({
         registerRequest,
         loginRequest,
         checkUserLogin,
+        logout,
     };
 
     return (
