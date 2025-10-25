@@ -45,6 +45,7 @@ func main() {
 	app.POST("/version/table/create", version.HandleCreateTable)
 
 	app.GET("/upgrade", worker.HandleUpgrade)
+	app.GET("/connection-types", worker.HandleGetConnectionTypes)
 
 	app.Logger.Fatal(app.Start("0.0.0.0:8080"))
 }

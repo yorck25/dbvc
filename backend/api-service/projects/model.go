@@ -13,3 +13,10 @@ type Projects struct {
 	Visibility     string    `db:"visibility" json:"visibility"`
 	ConnectionType int       `db:"connection_type" json:"connectionType"`
 }
+
+type CreateProjectRequest struct {
+	Name           string `db:"name" json:"name"`
+	Description    string `db:"description" json:"description"`
+	Visibility     string `db:"visibility" json:"visibility"`
+	ConnectionType int    `db:"connection_type" json:"connectionType"`
+}

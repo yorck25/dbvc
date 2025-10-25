@@ -66,25 +66,31 @@ func (r *Repository) GetActiveProjects() ([]Projects, error) {
 	return projects, err
 }
 
-func (r *Repository) CreateProject(p *Projects) error {
+func (r *Repository) CreateProject(cpr CreateProjectRequest, ownerID int) (Projects, error) {
+	var project Projects
+
 	stmt, err := r.db.PrepareNamed(`
 		INSERT INTO projects (owner_id, name, description, created_at, updated_at, active, visibility, connection_type)
 		VALUES (:owner_id, :name, :description, NOW(), NOW(), :active, :visibility, :connection_type)
-		RETURNING id`)
+		RETURNING *`)
 	if err != nil {
-		return err
+		return project, err
 	}
 
 	params := map[string]any{
-		"owner_id":        p.OwnerID,
-		"name":            p.Name,
-		"description":     p.Description,
-		"active":          p.Active,
-		"visibility":      p.Visibility,
-		"connection_type": p.ConnectionType,
+		"owner_id":        ownerID,
+		"name":            cpr.Name,
+		"description":     cpr.Description,
+		"active":          true,
+		"visibility":      cpr.Visibility,
+		"connection_type": cpr.ConnectionType,
 	}
 
-	return stmt.Get(&p.ID, params)
+	err = stmt.Get(&project, params)
+	if err != nil {
+		return project, err
+	}
+	return project, err
 }
 
 func (r *Repository) UpdateProject(p *Projects) error {

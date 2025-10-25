@@ -30,7 +30,6 @@ func (c *WebContext) GetUserId() int {
 	authHeader := c.Request().Header.Get("Authorization")
 	if !strings.HasPrefix(authHeader, "Bearer ") {
 		c.BadRequest(errors.New("no Bearer token found in Authorization header").Error())
-
 		return 0
 	}
 

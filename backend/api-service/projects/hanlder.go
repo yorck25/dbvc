@@ -6,13 +6,17 @@ import (
 )
 
 func HandleCreateProject(ctx *core.WebContext) error {
-	var project Projects
-	if err := ctx.Bind(&project); err != nil {
+	userID := ctx.GetUserId()
+
+	var cpr CreateProjectRequest
+	if err := ctx.Bind(&cpr); err != nil {
 		return ctx.BadRequest("invalid input")
 	}
 
 	repo := NewRepository(ctx)
-	if err := repo.CreateProject(&project); err != nil {
+
+	project, err := repo.CreateProject(cpr, userID)
+	if err != nil {
 		return ctx.InternalError(err.Error())
 	}
 
@@ -20,6 +24,8 @@ func HandleCreateProject(ctx *core.WebContext) error {
 }
 
 func HandleGetAllProjects(ctx *core.WebContext) error {
+	_ = ctx.GetUserId()
+
 	repo := NewRepository(ctx)
 	projects, err := repo.GetAllProjects()
 	if err != nil {
@@ -29,6 +35,8 @@ func HandleGetAllProjects(ctx *core.WebContext) error {
 }
 
 func HandleGetProjectByID(ctx *core.WebContext) error {
+	_ = ctx.GetUserId()
+
 	idParam := ctx.Param("id")
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
@@ -45,6 +53,8 @@ func HandleGetProjectByID(ctx *core.WebContext) error {
 }
 
 func HandleUpdateProject(ctx *core.WebContext) error {
+	_ = ctx.GetUserId()
+
 	idParam := ctx.Param("id")
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
@@ -66,6 +76,8 @@ func HandleUpdateProject(ctx *core.WebContext) error {
 }
 
 func HandleDeleteProject(ctx *core.WebContext) error {
+	_ = ctx.GetUserId()
+
 	idParam := ctx.Param("id")
 	id, err := strconv.Atoi(idParam)
 	if err != nil {
@@ -81,6 +93,8 @@ func HandleDeleteProject(ctx *core.WebContext) error {
 }
 
 func HandleGetActiveProjects(ctx *core.WebContext) error {
+	_ = ctx.GetUserId()
+	
 	repo := NewRepository(ctx)
 	projects, err := repo.GetActiveProjects()
 	if err != nil {
