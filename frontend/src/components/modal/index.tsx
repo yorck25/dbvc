@@ -1,11 +1,13 @@
 import styles from './style.module.scss';
-import {Button} from "../button";
+import {Button, ButtonType} from "../button";
 import {useEffect} from 'preact/hooks';
+import {CloseIcon} from "../icons";
 
 type FooterType = 'single' | 'double';
 
 interface Props {
     title: string;
+    hint?: string;
     content: React.ReactNode;
     isOpen: boolean;
     onClose: () => void;
@@ -21,6 +23,7 @@ interface Props {
 export const Modal = (
     {
         title,
+        hint,
         content,
         isOpen,
         onClose,
@@ -92,24 +95,13 @@ export const Modal = (
                                     onClick={(e) => closePopup(e)}
                                     aria-label="Close modal"
                                 >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="20"
-                                        height="20"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    >
-                                        <line x1="18" y1="6" x2="6" y2="18"/>
-                                        <line x1="6" y1="6" x2="18" y2="18"/>
-                                    </svg>
+                                    {CloseIcon()}
                                 </button>
                             </div>
 
-                            <p>Das ist ein super hint... :)</p>
+                            {hint && (
+                                <p>{hint}</p>
+                            )}
                         </div>
 
                         <div className={styles.content}>{content}</div>
@@ -127,6 +119,7 @@ export const Modal = (
                             ) : (
                                 <div className={styles.buttonGroup}>
                                     <Button
+                                        type={ButtonType.Outline}
                                         id="cancel-button"
                                         text={cancelButtonText}
                                         ariaLabel={cancelButtonText}

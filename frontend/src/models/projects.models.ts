@@ -1,14 +1,11 @@
-export interface IProjectRequest {
-    id: number;
-    ownerId: number;
+export interface ICreateProjectRequest {
     name: string;
-    createdAt: Date;
-    updatedAt: Date;
-    active: boolean;
+    description: string;
+    visibility: string;
     connectionType: number;
 }
 
-export interface Project {
+export interface IProject {
     id: number;
     ownerId: number;
     name: string;

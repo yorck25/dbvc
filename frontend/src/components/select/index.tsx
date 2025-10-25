@@ -48,7 +48,7 @@ export const Select = ({
                 disabled={disabled}
                 className={styles.select}
             >
-                {placeholder && (
+                {(placeholder || value === "") && (
                     <option value="" disabled hidden>
                         {placeholder}
                     </option>

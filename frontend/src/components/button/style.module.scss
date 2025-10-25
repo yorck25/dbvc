@@ -63,7 +63,7 @@
 
 .default {
   //Color needs to be adjust to the website design
-  background: #0c72e8;
+  background: variables.$highlight-blue;
   color: #ffffff;
 }
 
@@ -79,7 +79,7 @@
 .outline {
   background: none;
   color: #000;
-  border: 2px solid #000;
+  border: 1px solid variables.$highlight-blue;
 
   svg {
     fill: #000;
