@@ -9,7 +9,7 @@ import {
 } from "react";
 import type {ILoginRequest, IRegisterRequest, IUser} from "../models/user.models.ts";
 
-import {HTTPMethods} from "../lib/HTTPMethods.tsx";
+import {NetworkAdapter, saveTokenInStorage, setAuthHeader} from "../lib/networkAdapter.tsx";
 
 interface IAppContext {
     user: IUser | undefined;
@@ -23,6 +23,7 @@ interface IAppContext {
 
     registerRequest: (rr: IRegisterRequest) => Promise<boolean>;
     loginRequest: (lr: ILoginRequest) => Promise<boolean>;
+    checkUserLogin: () => boolean;
 }
 
 const AppContext = createContext<IAppContext | undefined>(undefined);
@@ -35,8 +36,37 @@ export const AppContextProvider: FC<{ children: ReactNode }> = ({
     const [token, setToken] = useState<string | undefined>();
 
     useEffect(() => {
-        console.log("get user from local storeage");
+        setUserStates();
     }, []);
+
+    const checkUserLogin = (): boolean => {
+        if (!isLoggedIn) {
+            return setUserStates();
+        }
+        return true;
+    };
+
+    const setUserStates = (): boolean => {
+        const storedToken = localStorage.getItem("authToken");
+        if (storedToken) {
+            setToken(storedToken);
+            setIsLoggedIn(true);
+            getUser().then(u => {
+                if (u) {
+                    setUser(u);
+                } else {
+                    setIsLoggedIn(false);
+                    setToken(undefined);
+                    localStorage.removeItem("authToken");
+                }
+            });
+            return true;
+        } else {
+            setIsLoggedIn(false);
+            setToken(undefined);
+            return false;
+        }
+    }
 
     const registerRequest = async (rr: IRegisterRequest): Promise<boolean> => {
         try {
@@ -44,7 +74,7 @@ export const AppContextProvider: FC<{ children: ReactNode }> = ({
             myHeaders.append("Content-Type", "application/json");
 
             const requestOptions: RequestInit = {
-                method: HTTPMethods.POST,
+                method: NetworkAdapter.POST,
                 headers: myHeaders,
                 redirect: 'follow',
                 body: JSON.stringify(rr),
@@ -72,13 +102,39 @@ export const AppContextProvider: FC<{ children: ReactNode }> = ({
         }
     };
 
+    const getUser = async (): Promise<IUser | undefined> => {
+        try {
+            const myHeaders = setAuthHeader();
+            myHeaders.append("Content-Type", "application/json");
+
+            const requestOptions: RequestInit = {
+                method: NetworkAdapter.GET,
+                headers: myHeaders,
+                redirect: 'follow',
+            }
+
+            const response = await fetch("http://localhost:8080/auth/me", requestOptions);
+
+            if (!response.ok) {
+                throw new Error("Network response was not ok");
+            }
+
+            const result: IUser = await response.json();
+            setUser(result);
+            return result;
+        } catch (e) {
+            console.error("Fetch error:", e);
+            return undefined;
+        }
+    }
+
     const loginRequest = async (lr: ILoginRequest): Promise<boolean> => {
         try {
             const myHeaders = new Headers();
             myHeaders.append("Content-Type", "application/json");
 
             const requestOptions: RequestInit = {
-                method: HTTPMethods.POST,
+                method: NetworkAdapter.POST,
                 headers: myHeaders,
                 redirect: 'follow',
                 body: JSON.stringify(lr),
@@ -106,20 +162,19 @@ export const AppContextProvider: FC<{ children: ReactNode }> = ({
         }
     }
 
-
-    const saveTokenInStorage = (token: string) => {
-        localStorage.setItem("authToken", token);
-    }
-
     const appContextValue: IAppContext = {
         user,
         setUser,
+
         isLoggedIn,
         setIsLoggedIn,
+
         token,
         setToken,
+
         registerRequest,
         loginRequest,
+        checkUserLogin,
     };
 
     return (

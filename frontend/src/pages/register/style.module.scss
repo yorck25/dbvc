@@ -137,58 +137,6 @@
         @media (max-width: 640px) {
           flex-direction: column;
         }
-
-        .btn_primary {
-          flex: 1;
-          padding: 14px variables.$spacing-lg;
-          background: variables.$highlight-blue;
-          color: variables.$white;
-          border: none;
-          border-radius: variables.$border-radius-medium;
-          font-size: 15px;
-          font-weight: 500;
-          font-family: variables.$primary-font-family;
-          cursor: pointer;
-          transition: all variables.$transition-fast;
-
-          &:hover {
-            background: darken(#0c8ce9, 8%);
-            transform: translateY(-1px);
-            box-shadow: variables.$shadow-medium;
-          }
-
-          &:active {
-            transform: translateY(0);
-          }
-
-          &:disabled {
-            background: variables.$gray-400;
-            cursor: not-allowed;
-            transform: none;
-          }
-        }
-
-        .btn_secondary {
-          flex: 1;
-          padding: 14px variables.$spacing-lg;
-          background: variables.$white;
-          color: variables.$highlight-blue;
-          border: 1px solid variables.$highlight-blue;
-          border-radius: variables.$border-radius-medium;
-          font-size: 15px;
-          font-weight: 500;
-          font-family: variables.$primary-font-family;
-          cursor: pointer;
-          transition: all variables.$transition-fast;
-
-          &:hover {
-            background: variables.$gray-100;
-          }
-
-          &:active {
-            transform: scale(0.98);
-          }
-        }
       }
     }
   }
