@@ -26,9 +26,7 @@
     background: variables.$white;
     border-radius: variables.$border-radius-large;
     box-shadow: variables.$shadow-medium;
-    width: 100%;
-    max-width: 740px;
-    overflow: hidden;
+    width: 75%;
     display: flex;
     flex-direction: column;
     visibility: hidden;
@@ -80,6 +78,14 @@
       padding: variables.$spacing-xl variables.$spacing-lg;
       text-align: left;
       flex: 1;
+      max-width: 100%;
+      overflow-x: auto;
+      word-wrap: break-word;
+      box-sizing: border-box;
+
+      * {
+        box-sizing: border-box;
+      }
     }
 
     .footer {
