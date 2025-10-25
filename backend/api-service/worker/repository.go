@@ -15,6 +15,18 @@ func NewRepository(ctx *core.WebContext) *Repository {
 	return &Repository{db: ctx.GetDb()}
 }
 
+func (r *Repository) GetConnectionTypes() ([]ConnectionType, error) {
+	var connectionTypes []ConnectionType
+	query := "SELECT * FROM connection_types WHERE active = true"
+
+	err := r.db.Select(&connectionTypes, query)
+	if err != nil {
+		return connectionTypes, err
+	}
+
+	return connectionTypes, nil
+}
+
 func (r *Repository) GetProjectDetails(id int) (projects.Projects, error) {
 	var project projects.Projects
 	stmt, err := r.db.PrepareNamed("SELECT * FROM projects WHERE id = :id")

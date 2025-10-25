@@ -9,6 +9,19 @@ import (
 	"strconv"
 )
 
+func HandleGetConnectionTypes(ctx *core.WebContext) error {
+	_ = ctx.GetUserId()
+
+	repo := NewRepository(ctx)
+
+	connectionTypes, err := repo.GetConnectionTypes()
+	if err != nil {
+		return ctx.InternalError("Fail to get connection types: " + err.Error())
+	}
+
+	return ctx.Sucsess(connectionTypes)
+}
+
 func HandleUpgrade(ctx *core.WebContext) error {
 	projectID, err := strconv.Atoi(ctx.Request().Header.Get("Id"))
 	if err != nil {
