@@ -1,52 +1,5 @@
-.popup {
-  font-family: Roboto, Helvetica, Arial, sans-serif;
-  width: 400px;
-  background: #fff;
-  border-radius: 15px;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  text-align: center;
-  padding: 30px;
-  color: #333;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  visibility: hidden;
-  opacity: 0;
-  z-index: 1000;
-  transition: visibility 0s, opacity 0.4s ease-in-out;
-
-  h2 {
-    font-size: 38px;
-    font-weight: 500;
-    margin: 0 0 0 0;
-  }
-
-  .content {
-    margin: 1rem 0;
-    width: 100%;
-    text-wrap: wrap;
-  }
-
-  .footer {
-    margin-top: 1.5rem;
-
-    .buttonGroup {
-      display: flex;
-      gap: 1rem;
-      justify-content: center;
-
-      button {
-        flex: 1;
-      }
-    }
-  }
-}
-
-.popup.show {
-  visibility: visible;
-  opacity: 1;
-}
+@use "../../styles/variables";
+@use "../../styles/mixins";
 
 .overlay {
   position: fixed;
@@ -62,9 +15,102 @@
   visibility: hidden;
   opacity: 0;
   transition: visibility 0s, opacity 0.4s ease-in-out;
-}
 
-.overlay.show {
-  visibility: visible;
-  opacity: 1;
+  &.show {
+    visibility: visible;
+    opacity: 1;
+  }
+
+  .popup {
+    font-family: variables.$primary-font-family;
+    background: variables.$white;
+    border-radius: variables.$border-radius-large;
+    box-shadow: variables.$shadow-medium;
+    width: 100%;
+    max-width: 740px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+
+    &.show {
+      visibility: visible;
+      opacity: 1;
+    }
+
+    .header {
+      padding: variables.$spacing-lg;
+      border-bottom: 1px solid variables.$border-color;
+      text-align: left;
+
+      .top_row {
+        display: flex;
+        justify-content: space-between;
+
+        h2 {
+          font-size: 28px;
+          font-weight: 500;
+          color: variables.$primary-font-color;
+          margin: 0 0 variables.$spacing-sm 0;
+        }
+
+        button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: variables.$muted-font-color;
+
+            &:hover {
+                color: variables.$primary-font-color;
+            }
+        }
+      }
+
+      p {
+        font-size: 14px;
+        color: variables.$muted-font-color;
+        margin: 0;
+      }
+    }
+
+    .content {
+      padding: variables.$spacing-xl variables.$spacing-lg;
+      text-align: left;
+      flex: 1;
+    }
+
+    .footer {
+      padding: variables.$spacing-lg variables.$spacing-lg;
+      border-top: 1px solid variables.$border-color;
+      display: flex;
+      justify-content: flex-end;
+      gap: variables.$spacing-md;
+      background: variables.$white;
+
+      &:has(#primary-button) {
+        background: red;
+        justify-content: center;
+
+        #primary-button {
+          width: 50%;
+          max-width: 300px;
+        }
+      }
+
+      .buttonGroup {
+        display: flex;
+        gap: variables.$spacing-md;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+
+        button {
+          flex: 1;
+          min-width: 120px;
+        }
+      }
+    }
+  }
 }
