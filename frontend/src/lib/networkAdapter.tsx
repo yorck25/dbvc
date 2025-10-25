@@ -14,6 +14,10 @@ export const saveTokenInStorage = (token: string) => {
     localStorage.setItem("authToken", token);
 }
 
+export const removeTokenFromStorage = () => {
+    localStorage.removeItem("authToken");
+}
+
 export const setAuthHeader = (headers: Headers | undefined = undefined): Headers => {
     const token = getTokenFromStorage();
 

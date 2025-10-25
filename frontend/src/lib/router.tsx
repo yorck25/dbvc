@@ -10,15 +10,13 @@ import {useAppContext} from "../contexts/app.context.tsx";
 
 export const Router = () => {
     const navigate = useNavigate();
-    const {checkUserLogin} = useAppContext();
+    const {checkUserLogin, isLoggedIn} = useAppContext();
 
     useEffect(() => {
-        const res = checkUserLogin();
-        console.log(res);
-        if (!res) {
+        if (!checkUserLogin()) {
             navigate("/login");
         }
-    }, [])
+    }, [isLoggedIn])
 
     return (
         <Routes>
