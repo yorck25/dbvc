@@ -1,0 +1,48 @@
+@use "../../styles/variables";
+
+.input_group {
+  display: flex;
+  flex-direction: column;
+  gap: variables.$spacing-sm;
+  width: 100%;
+
+  label {
+    font-size: 14px;
+    font-weight: 500;
+    color: variables.$secondary-font-color;
+  }
+
+  .error_message {
+    font-size: 12px;
+    color: variables.$red;
+    margin: 0;
+  }
+
+  textarea {
+    resize: none;
+    width: 100%;
+    padding: 12px variables.$spacing-md;
+    border: 1px solid variables.$border-color;
+    border-radius: variables.$border-radius-medium;
+    font-size: 14px;
+    font-family: variables.$primary-font-family;
+    color: variables.$primary-font-color;
+    background: variables.$white;
+    transition: all variables.$transition-fast;
+
+    &::placeholder {
+      color: variables.$placeholder-font-color;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: variables.$highlight-blue;
+      box-shadow: 0 0 0 3px rgba(12, 140, 233, 0.1);
+    }
+
+    &:disabled {
+      background: variables.$gray-100;
+      cursor: not-allowed;
+    }
+  }
+}
