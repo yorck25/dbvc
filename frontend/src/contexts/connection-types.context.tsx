@@ -5,6 +5,8 @@ import {NetworkAdapter, setAuthHeader} from "../lib/networkAdapter.tsx";
 interface IConnectionTypesContext {
     connectionTypes: IConnectionType[] | undefined;
     setConnectionTypes: Dispatch<IConnectionType[] | undefined>;
+
+    getConnectionTypeById: (id: number) => IConnectionType | undefined;
 }
 
 const ConnectionTypesContext = createContext<IConnectionTypesContext | undefined>(undefined);
@@ -32,9 +34,14 @@ export const ConnectionTypesContextProvider: FC<{ children: ReactNode }> = ({chi
             });
     }
 
+    const getConnectionTypeById = (id: number): IConnectionType | undefined => {
+        return connectionTypes?.find(ct => ct.id === id);
+    }
+
     const contextValue: IConnectionTypesContext = {
         connectionTypes,
         setConnectionTypes,
+        getConnectionTypeById,
     };
 
     return (

@@ -14,12 +14,13 @@ interface InputProps {
     inputType?: InputType;
     label?: string;
     placeholder?: string;
-    value: string;
+    value: string | number;
     handleInput: (e: Event) => void;
     errorMessage?: string;
     checked?: boolean;
     disabled?: boolean;
     name?: string;
+    limit?: number;
 }
 
 export const Input = ({
@@ -33,6 +34,7 @@ export const Input = ({
                           checked,
                           disabled = false,
                           name,
+                            limit,
                       }: InputProps) => {
     const isCheckboxOrRadio =
         inputType === InputType.CHECKBOX || inputType === InputType.RADIO;
@@ -55,6 +57,8 @@ export const Input = ({
 
             <div className={styles.input_wrapper}>
                 <input
+                    minlength={0}
+                    maxlength={limit ? limit : undefined}
                     type={inputType}
                     id={id}
                     name={name}

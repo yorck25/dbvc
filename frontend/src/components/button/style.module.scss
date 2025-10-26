@@ -22,7 +22,7 @@
   transition: variables.$transition-fast opacity;
 
   &:focus {
-    outline: 2px solid variables.$black;
+    outline: 1px solid variables.$gray-600;
   }
 
   &:hover {

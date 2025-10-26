@@ -1,0 +1,29 @@
+@use "../../../styles/variables";
+@use "../../../styles/mixins";
+
+.create_project_credentials_form_groups {
+  .create_project_form {
+    width: 100%;
+
+    .form_row {
+      display: grid;
+      padding: variables.$spacing-xs 0;
+      grid-template-columns: 1fr 1fr;
+      gap: variables.$spacing-md;
+      @media (max-width: 640px) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .single_form_row {
+      padding: variables.$spacing-sm 0;
+      display: flex;
+      flex-direction: column;
+      gap: variables.$spacing-sm;
+    }
+  }
+
+  .db_credentials_form_wrapper {
+    margin-top: variables.$spacing-lg;
+  }
+}
