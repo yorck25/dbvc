@@ -43,6 +43,13 @@ CREATE TABLE projects
     connection_type INT REFERENCES connection_types (id)
 );
 
+CREATE TABLE projects_credentials (
+    project_id int REFERENCES projects (id) ON DELETE CASCADE,
+    project_password varchar(255),
+    database_auth jsonb not null,
+    updates_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE versions
 (
     id         SERIAL PRIMARY KEY,
@@ -98,7 +105,7 @@ INSERT INTO connection_types (type_name, key, description)
 VALUES ('PostgreSQL', 'psql', 'PostgreSQL Database Connection'),
        ('MySQL', 'mysql', 'MySQL Database Connection'),
        ('SQLite', 'sqlite', 'Lightweight local SQLite database'),
-       ('MongoDB', 'mongo', 'MongoDB NoSQL Database');
+       ('MsSQL', 'mssql', 'Microsoft SQL database');
 
 -- ✅ users
 INSERT INTO users (first_name, email, active)
