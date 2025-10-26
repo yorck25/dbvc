@@ -9,6 +9,7 @@ import {ProjectVisibilityType} from "../../enums/projects.enum.ts";
 import {ProjectsTable} from "../../components/projects/projectsTable";
 import React from "react";
 import {CreateProjectCredentialsForm} from "../../components/projects/createProjectCredentailsForm";
+import {AddMembersForm} from "../../components/projects/addMembersForm";
 
 export interface ICreateProjectFormData {
     projectName: string;
@@ -40,6 +41,7 @@ export const ProjectsPage = () => {
     const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(true);
     const maxSteps = 2;
     const [step, setStep] = useState<number>(1);
+    const [members, setMembers] = useState<number[]>([]);
 
     const openCreateProjectModal = () => {
         setIsCreateProjectModalOpen(true);
@@ -133,6 +135,8 @@ export const ProjectsPage = () => {
                     content={
                         <ProjectStepper
                             step={step}
+                            members={members}
+                            setMembers={setMembers}
                             newProjectData={newProjectData}
                             setNewProjectData={setNewProjectData}
                             newCredentialsData={newCredentialsData}
@@ -154,6 +158,9 @@ export const ProjectsPage = () => {
 
 interface IProjectStepperProps {
     step: number;
+    members: number[];
+    setMembers: React.Dispatch<React.SetStateAction<number[]>>;
+
     newProjectData: ICreateProjectFormData,
     setNewProjectData: React.Dispatch<React.SetStateAction<ICreateProjectFormData>>;
 
@@ -178,11 +185,9 @@ const ProjectStepper = (props: IProjectStepperProps) => {
                                               setNewCredentialsData={props.setNewCredentialsData}/>
             )}
 
-                {props.step == 2 && (
-                    <div>
-                        Add Project Members
-                    </div>
-                )}
+            {props.step == 2 && (
+                <AddMembersForm  members={props.members} setMembers={props.setMembers}/>
+            )}
         </>
     )
 }

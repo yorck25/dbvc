@@ -9,11 +9,13 @@ import {EllipsisVerticalIcon} from "../../icons";
 import TableContainer from "@mui/material/TableContainer";
 import styles from "./style.module.scss";
 import {useConnectionTypesContext} from "../../../contexts/connection-types.context.tsx";
+import {useUserContext} from "../../../contexts/users.context.tsx";
 
 export const ProjectsTable = ({projects}: { projects: IProject[] }) => {
+    const {users} = useUserContext();
     const {connectionTypes} = useConnectionTypesContext();
 
-    const dummyMembers = ["Alice", "Bob", "Charlie", "David", "Eve", "Frank", "Grace", "Heidi"];
+    const dummyMembers = users;
 
     const renderMembers = () => {
         return (
