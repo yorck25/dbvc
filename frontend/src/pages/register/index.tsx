@@ -184,7 +184,7 @@ export const RegisterPage = () => {
                     </div>
 
                     <div className={styles.form_actions}>
-                        <Button text={"Sign Up"} callback={(event?: TargetedMouseEvent<HTMLButtonElement> | undefined) => handleSubmit(event!)}
+                        <Button text={"Sign Up"} disabled={!isFormValid} callback={(event?: TargetedMouseEvent<HTMLButtonElement> | undefined) => handleSubmit(event!)}
                                 ariaLabel={"sign up button"} type={ButtonType.Default} isLoading={isLoading}>
                         </Button>
 

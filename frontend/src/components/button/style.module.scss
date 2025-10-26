@@ -19,6 +19,7 @@
   align-items: center;
   text-align: center;
   border: none;
+  transition: variables.$transition-fast opacity;
 
   &:focus {
     outline: 2px solid variables.$black;
@@ -26,6 +27,12 @@
 
   &:hover {
     opacity: 0.9;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    color: variables.$gray-400;
+    opacity: 0.6;
   }
 
   svg {

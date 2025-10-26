@@ -109,7 +109,7 @@ export const LoginPage = () => {
                     </div>
 
                     <div className={styles.form_actions}>
-                        <Button text={"Sign In"}
+                        <Button text={"Sign In"}  disabled={!isFormValid}
                                 callback={(event?: TargetedMouseEvent<HTMLButtonElement> | undefined) => handleSubmit(event!)}
                                 ariaLabel={"sign in button"} type={ButtonType.Default} isLoading={isLoading}>
                         </Button>
