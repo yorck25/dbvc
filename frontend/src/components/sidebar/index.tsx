@@ -1,11 +1,15 @@
-import { Link, useNavigate } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import style from "./style.module.scss";
-import { useAppContext } from "../../contexts/app.context";
+import {useAppContext} from "../../contexts/app.context";
 import {LogoutIcon} from "../icons";
+import {Input, InputType} from "../input";
+import {useState} from "react";
 
 export const Sidebar = () => {
   const { logout } = useAppContext();
   const navigate = useNavigate();
+
+  const [searchValue, setSearchValue] = useState("");
 
   const handleLogout = () => {
     logout();
@@ -14,9 +18,9 @@ export const Sidebar = () => {
 
   return (
     <div className={style.sidebar}>
-      <div className={style.logo_container}>
+      <div className={style.top_container}>
         <div className={style.search_bar}>
-          <input type="text"></input>
+          <Input id={"search"} inputType={InputType.TEXT} value={searchValue} placeholder={"Search"} handleInput={(e: Event) => setSearchValue((e.target as HTMLInputElement).value)} />
         </div>
 
         <div className={style.divider} />

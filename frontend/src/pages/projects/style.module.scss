@@ -1,3 +1,37 @@
-.create_button_wrapper{
-  width: 150px;
+@use "../../styles/variables.scss";
+@use "../../styles/mixins" as mixin;
+
+.project_page {
+  @include mixin.base-page-style;
+  background-color: #fafafa;
+  min-height: 100vh;
+
+  .header {
+    max-width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: variables.$spacing-md;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 1rem;
+
+    .title {
+      font-size: 1.75rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .button_wrapper {
+      max-width: 150px;
+    }
+  }
+
+  .table_wrapper {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+    padding: 1.5rem;
+  }
 }
+
+

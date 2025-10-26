@@ -1,0 +1,48 @@
+@use "../../../styles/variables";
+
+//------------------
+// Member Profiles Styles
+//------------------
+.members_container {
+  display: flex;
+  gap: variables.$spacing-xs;
+  border-radius: 50px;
+  overflow: hidden;
+}
+
+.profile_image_container {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: variables.$white;
+  font-weight: bold;
+  font-size: 12px;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
+
+  &:not(:first-child) {
+    margin-left: -10px;
+  }
+}
+
+//------------------
+// Table Styles
+//------------------
+
+.option_button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+
+  svg {
+    height: 26px;
+    fill: variables.$gray-800;
+  }
+}

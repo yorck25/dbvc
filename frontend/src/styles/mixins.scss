@@ -1,33 +1,33 @@
 @use "variables";
 
-@define-mixin mobile {
+@mixin mobile {
     @media (max-width: 599px) {
-        @mixin-content;
+        @content;
     }
 }
-@define-mixin tablet {
+@mixin tablet {
     @media (min-width: 600px) {
-        @mixin-content;
+        @content;
     }
 }
-@define-mixin desktop {
+@mixin desktop {
     @media (min-width: 900px) {
-        @mixin-content;
+        @content;
     }
 }
-@define-mixin widescreen {
+@mixin widescreen {
     @media (min-width: 1444px) {
-        @mixin-content;
+        @content;
     }
 }
-@define-mixin fullhd {
+@mixin fullhd {
     @media (min-width: 2400px) {
-        @mixin-content;
+        @content;
     }
 }
 
 @mixin base-page-style {
-    width: 100%;
+    width: auto;
     height: 100dvb;
     padding: variables.$spacing-md;
     background: variables.$primary-background-color;

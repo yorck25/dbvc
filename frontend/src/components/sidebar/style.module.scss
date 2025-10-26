@@ -1,32 +1,40 @@
 @use "../../styles/variables.scss";
 
 .sidebar {
-    padding: 0 25px;
     background: variables.$secondary-background;
-    width: 300px;
-    max-width: 250px;
+    width: 250px;
     height: 100dvh;
     display: flex;
     flex-direction: column;
+    padding: 0 variables.$spacing-lg;
 
-    .logo_container {
-        padding: 15px 0 0 0;
+    .top_container {
+        padding: variables.$spacing-md 0 0 0;
         display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 100%;
         flex-direction: column;
-        flex-shrink: 0;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        box-sizing: border-box;
 
-        img {
-            width: 250px;
+        .search_bar {
+            width: 80%;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            input {
+                width: 100%;
+                box-sizing: border-box;
+            }
         }
 
         .divider {
             height: 2.5px;
             width: 100%;
             background: variables.$gray-400;
-            margin: 10px 0;
+            margin: variables.$spacing-sm;
         }
     }
 
@@ -35,8 +43,7 @@
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-
-        padding: 20px 0;
+        padding: variables.$spacing-md 0;
 
         ul {
             list-style: none;
@@ -48,6 +55,7 @@
                 align-items: center;
                 border-radius: 5px;
                 gap: 10px;
+                transition: background 0.3s;
 
                 svg {
                     height: 26px;
@@ -60,9 +68,9 @@
                     width: 100%;
                     text-decoration: none;
                     color: variables.$primary-font-color;
-                    transition: 0.3s;
                     border-radius: 5px;
                     padding: 5px 0;
+                    transition: color 0.3s;
                 }
 
                 &:hover {

@@ -15,12 +15,19 @@ export const ProjectContextProvider: FC<{ children: ReactNode }> = ({children}) 
     const [projects, setProjects] = useState<IProject[]>();
 
     useEffect(() => {
-        console.log("projects context");
         fetchProjects();
     }, []);
 
     const fetchProjects = () => {
-        fetch('http://localhost:8080/projects')
+        const myHeaders = setAuthHeader();
+        myHeaders.append("Content-Type", "application/json");
+
+        const requestOptions: RequestInit = {
+            method: NetworkAdapter.GET,
+            headers: myHeaders,
+        }
+
+        fetch('http://localhost:8080/projects', requestOptions)
             .then(res => res.json())
             .then((data: IProject[]) => {
                 setProjects(data);
@@ -31,8 +38,6 @@ export const ProjectContextProvider: FC<{ children: ReactNode }> = ({children}) 
         try {
             const myHeaders = setAuthHeader();
             myHeaders.append("Content-Type", "application/json");
-
-            console.log(cpr)
 
             const requestOptions: RequestInit = {
                 method: NetworkAdapter.POST,

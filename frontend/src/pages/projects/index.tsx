@@ -1,11 +1,12 @@
 import {useState} from "preact/hooks";
 import {Button, ButtonType} from "../../components/button";
 import {useProjectContext} from "../../contexts/projects.context";
-import type {ICreateProjectRequest, IProject} from "../../models/projects.models";
+import type {ICreateProjectRequest} from "../../models/projects.models";
 import styles from "./style.module.scss";
 import {Modal} from "../../components/modal";
 import {CreateProjectForm} from "../../components/projects/createProjectForm";
 import {ProjectVisibilityType} from "../../enums/projects.enum.ts";
+import {ProjectsTable} from "../../components/projects/projectsTable";
 
 export interface ICreateProjectFormData {
     projectName: string;
@@ -17,7 +18,7 @@ export interface ICreateProjectFormData {
 export const ProjectsPage = () => {
     const {projects, createProject} = useProjectContext();
 
-    const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(true);
+    const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(false);
 
     const openCreateProjectModal = () => {
         setIsCreateProjectModalOpen(true);
@@ -60,45 +61,43 @@ export const ProjectsPage = () => {
     }
 
     return (
-        <div>
-            <div className={styles.create_button_wrapper}>
-                <Button text={"New Project +"} callback={() => openCreateProjectModal()}
-                        ariaLabel={"new Button"} type={ButtonType.Default}>
-                </Button>
+        <div className={styles.project_page}>
+            <div className={styles.header}>
+                <h1 className={styles.title}>Projects</h1>
+
+                <div className={styles.button_wrapper}>
+                    <Button
+                        text="New Project +"
+                        callback={() => openCreateProjectModal()}
+                        ariaLabel="new project"
+                        type={ButtonType.Default}
+                    />
+                </div>
             </div>
 
-            {projects?.map((project: IProject) => (
-                <ProjectCell project={project}/>
-            ))}
+            <div className={styles.table_wrapper}>
+                <ProjectsTable projects={projects}/>
+            </div>
 
             {isCreateProjectModalOpen && (
                 <Modal
                     title="Create New Project"
                     hint="Don’t worry, you can always refactor it later... probably."
                     content={
-                        <div>
-                            <CreateProjectForm newProjectData={newProjectData} setNewProjectData={setNewProjectData}/>
-                        </div>
+                        <CreateProjectForm
+                            newProjectData={newProjectData}
+                            setNewProjectData={setNewProjectData}
+                        />
                     }
                     footerType="double"
-                    isOpen={true}
-                    submitButtonText={"Create Project"}
+                    isOpen
+                    submitButtonText="Create Project"
                     onSubmit={handleSubmit}
                     cancelButtonText="Cancel"
                     onCancel={closeCreateProjectModal}
                     onClose={closeCreateProjectModal}
-                    primaryButtonText="Got it"
                 />
             )}
-        </div>
-    )
-}
-
-const ProjectCell = ({project}: { project: IProject }) => {
-    return (
-        <div key={project.id}>
-            <h2>{project.name}</h2>
-            <p>{project.description}</p>
         </div>
     )
 }
