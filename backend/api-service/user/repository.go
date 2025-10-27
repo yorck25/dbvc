@@ -283,3 +283,36 @@ func (r *Repository) CheckEmailExists(email string) (bool, error) {
 
 	return exists, err
 }
+
+func (r *Repository) SearchMembers(searchValue string) ([]MemberRequest, error) {
+	var members []MemberRequest
+
+	query := `
+		SELECT 
+			u.id,
+			u.first_name,
+			u.last_name,
+			ul.username,
+			u.email,
+			u.active
+		FROM users u
+		JOIN user_login ul ON ul.user_id = u.id
+		WHERE 
+			u.first_name ILIKE '%' || :search_value || '%' OR
+			u.last_name ILIKE '%' || :search_value || '%' OR
+			u.email ILIKE '%' || :search_value || '%' OR
+			ul.username ILIKE '%' || :search_value || '%'
+		ORDER BY u.created_at DESC;
+	`
+
+	stmt, err := r.db.PrepareNamed(query)
+	if err != nil {
+		return members, err
+	}
+	defer stmt.Close()
+
+	params := map[string]any{"search_value": searchValue}
+
+	err = stmt.Select(&members, params)
+	return members, err
+}

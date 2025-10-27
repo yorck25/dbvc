@@ -32,6 +32,8 @@ func main() {
 	app.POST("/auth/register", user.HandleRegister)
 	app.GET("/auth/me", user.HandleGetProfile)
 
+	app.GET("/users/search", user.HandleSearchMembers)
+
 	app.GET("/projects", projects.HandleGetAllProjects)
 	app.GET("/projects/active", projects.HandleGetActiveProjects)
 	app.GET("/projects/:id", projects.HandleGetProjectByID)

@@ -4,7 +4,6 @@ import (
 	"backend/auth"
 	"backend/core"
 	"fmt"
-
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -208,4 +207,16 @@ func HandleRequestPasswordReset(ctx *core.WebContext) error {
 	return ctx.Sucsess(MessageResponse{
 		Message: "if the email exists, a password reset link has been sent",
 	})
+}
+
+func HandleSearchMembers(ctx *core.WebContext) error {
+	searchValue := ctx.QueryParam("query")
+	repo := NewRepository(ctx)
+
+	members, err := repo.SearchMembers(searchValue)
+	if err != nil {
+		return ctx.InternalError("failed to search members" + err.Error())
+	}
+
+	return ctx.Sucsess(members)
 }
