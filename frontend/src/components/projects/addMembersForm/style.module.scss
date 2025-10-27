@@ -3,7 +3,33 @@
 .add_members_form {
   width: 100%;
 
+  .added_members_list {
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+    gap: variables.$spacing-sm;
+    margin: 0;
+    padding: 0;
+
+    li {
+      padding: variables.$spacing-xs variables.$spacing-md;
+      border: 1px solid variables.$border-color;
+      border-radius: variables.$border-radius-large;
+      box-shadow: variables.$shadow-medium;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+
+      .remove_button {
+        border: none;
+        border-radius: variables.$border-radius-large;
+      }
+    }
+  }
+
   .search_header {
+    margin-top: variables.$spacing-md;
     display: flex;
     flex-direction: row;
     gap: variables.$spacing-lg;
@@ -17,7 +43,7 @@
   .user_list {
     max-height: 250px;
     overflow: auto;
-    width: 30%;
+    width: 50%;
     border: 1px solid variables.$border-color;
     list-style: none;
     margin:  0 0 variables.$spacing-md 0;
@@ -34,6 +60,10 @@
       align-items: center;
       height: auto;
       justify-content: space-between;
+
+      .user_metadata {
+
+      }
     }
   }
 

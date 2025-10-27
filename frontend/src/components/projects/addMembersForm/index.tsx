@@ -1,49 +1,102 @@
 import {Input} from "../../input";
 import styles from "./style.module.scss";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Button, ButtonType} from "../../button";
 import {useUserContext} from "../../../contexts/users.context.tsx";
+import {CloseIcon} from "../../icons";
+import type {IMemberRequest} from "../../../models/user.models.ts";
 
 export interface IAddMembersFormProps {
-    members: number[];
-    setMembers: React.Dispatch<React.SetStateAction<number[]>>;
+    members: IMemberRequest[];
+    setMembers: React.Dispatch<React.SetStateAction<IMemberRequest[]>>;
 }
 
 export const AddMembersForm = ({members, setMembers}: IAddMembersFormProps) => {
-    const {users} = useUserContext();
-    const [searchUser, setSearchUser] = useState<string>("");
+    const {searchAvailableMembers} = useUserContext();
+    const [searchUserValue, setSearchUserValue] = useState<string>("");
+    const [foundUsers, setFoundUsers] = useState<IMemberRequest[]>([]);
+    const [_, setDebouncedInputValue] = React.useState("")
 
-    const addMember = (id: number) => {
+    useEffect(() => {
+        const delayInputTimeoutId = setTimeout(() => {
+            setDebouncedInputValue(searchUserValue);
+        }, 500);
+        return () => {
+            handleSearchUser();
+            clearTimeout(delayInputTimeoutId);
+        };
+    }, [searchUserValue, 500])
+
+    useEffect(() => {
+        handleSearchUser();
+    }, []);
+
+    const handleSearchUser = () => {
+        searchAvailableMembers(searchUserValue).then((foundUsers) => {
+            setFoundUsers(foundUsers);
+        })
+    }
+
+    const filterFoundUsers = () => {
+        return foundUsers.filter((user) => {
+            return !members.find((member) => {
+                return member.id === user.id
+            })
+        });
+    }
+
+    const addMember = (member: IMemberRequest) => {
+        if (members.find((m) => m.id === member.id)) {
+            console.log("member already added");
+            return
+        }
+
         setMembers([
             ...members,
-            id
+            member
         ]);
+    }
+
+    const removeMember = (id: number) => {
+        setMembers(members.filter((member) => member.id !== id));
     }
 
     return (
         <div className={styles.add_members_form}>
-            <div className={styles.search_header}>
+            <ul className={styles.added_members_list}>
+                {members.map((user: IMemberRequest, index: number) => (
+                    <li key={index}>
+                        <span>{user.username}</span>
+                        <button onClick={() => removeMember(user.id)}
+                                className={styles.remove_button}>{CloseIcon()}</button>
+                    </li>
+                ))}
+            </ul>
 
+            <div className={styles.search_header}>
                 <div className={styles.input_wrapper}>
                     <Input
                         id={"searchUser"}
-                        value={searchUser}
-                        handleInput={(e: Event) => setSearchUser((e.target as HTMLInputElement).value)}
+                        value={searchUserValue}
+                        handleInput={(e: Event) => setSearchUserValue((e.target as HTMLInputElement).value)}
                         placeholder={"Search User..."}
                     />
                 </div>
 
                 <div className={styles.button_wrapper}>
-                    <Button text={"Search User"} callback={() => console.log("search user")}></Button>
+                    <Button text={"Search User"} callback={() =>handleSearchUser()} />
                 </div>
             </div>
 
             <ul className={styles.user_list}>
-                {users.map((user: string, index: number) => (
-                    <li className={styles.user_list_items} onClick={() => addMember(index)} key={index}>
-                        <span>{user}</span>
+                {filterFoundUsers().map((user: IMemberRequest, index: number) => (
+                    <li className={styles.user_list_items} key={index}>
+                        <div className={styles.user_metadata}>
+                            <p>{user.username}</p>
+                            <p>{user.email}</p>
+                        </div>
                         <div className={styles.button_wrapper}>
-                            <Button type={ButtonType.Outline} text={"Add"} callback={() => addMember(index)}/>
+                            <Button type={ButtonType.Outline} text={"Add"} callback={() => addMember(user)}/>
                         </div>
                     </li>
                 ))}

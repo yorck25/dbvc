@@ -22,3 +22,12 @@ export interface IUser {
     updatedAt: string;
     active: boolean;
 }
+
+export interface IMemberRequest {
+    id: number;
+    firstName: string;
+    lastName: string;
+    username: string;
+    email: string;
+    active: boolean;
+}
