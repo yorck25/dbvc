@@ -17,7 +17,17 @@ func HandleCreateProject(ctx *core.WebContext) error {
 
 	project, err := repo.CreateProject(cpr, userID)
 	if err != nil {
-		return ctx.InternalError(err.Error())
+		return ctx.InternalError("Error Create Project Metadata: " + err.Error())
+	}
+
+	err = repo.CreateProjectCredentials(cpr.Credentials, project.ID)
+	if err != nil {
+		return ctx.InternalError("Error Create Project Credentials: " + err.Error())
+	}
+
+	err = repo.CreateProjectMembers(cpr.Members, project.ID)
+	if err != nil {
+		return ctx.InternalError("Error Create Project Members: " + err.Error())
 	}
 
 	return ctx.Sucsess(project)
@@ -94,7 +104,7 @@ func HandleDeleteProject(ctx *core.WebContext) error {
 
 func HandleGetActiveProjects(ctx *core.WebContext) error {
 	_ = ctx.GetUserId()
-	
+
 	repo := NewRepository(ctx)
 	projects, err := repo.GetActiveProjects()
 	if err != nil {

@@ -15,8 +15,23 @@ type Projects struct {
 }
 
 type CreateProjectRequest struct {
+	Metadata    CreateProjectMetadataRequest    `json:"metadata"`
+	Credentials CreateProjectCredentialsRequest `json:"credentials"`
+	Members     CreateProjectMembersRequest     `json:"members"`
+}
+
+type CreateProjectMetadataRequest struct {
 	Name           string `db:"name" json:"name"`
 	Description    string `db:"description" json:"description"`
 	Visibility     string `db:"visibility" json:"visibility"`
 	ConnectionType int    `db:"connection_type" json:"connectionType"`
+}
+
+type CreateProjectCredentialsRequest struct {
+	ProjectPassword string      `json:"projectPassword"`
+	DatabaseAuth    interface{} `json:"databaseAuth"`
+}
+
+type CreateProjectMembersRequest struct {
+	Members []int `json:"members"`
 }

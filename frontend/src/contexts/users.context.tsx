@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useState, type Dispatch, type FC, type ReactNode} from 'react';
+import {createContext, useContext, useState, type Dispatch, type FC, type ReactNode} from 'react';
 import type {StateUpdater} from "preact/hooks";
 import {NetworkAdapter, setAuthHeader} from "../lib/networkAdapter.tsx";
 import type {IMemberRequest} from "../models/user.models.ts";
@@ -13,10 +13,7 @@ interface IUserContext {
 const UserContext = createContext<IUserContext | undefined>(undefined);
 
 export const UserContextProvider: FC<{ children: ReactNode }> = ({children}) => {
-    const [users, setUsers] = useState<string[]>(["Alice", "Bob", "Charlie", "David", "Eve", "Frank", "Grace", "Heidi"]);
-
-    useEffect(() => {
-    }, []);
+    const [users, setUsers] = useState<string[]>([]);
 
     const searchAvailableMembers = async (searchValue: string): Promise<IMemberRequest[]> => {
         const headers = setAuthHeader();
@@ -27,7 +24,7 @@ export const UserContextProvider: FC<{ children: ReactNode }> = ({children}) => 
             headers: headers,
         }
 
-        const res = await fetch(`http://localhost:8080/users/search?query=${searchValue}`, requestOptions)
+        const res: Response = await fetch(`http://localhost:8080/users/search?query=${searchValue}`, requestOptions)
         const result: IMemberRequest[] = await res.json();
         return result;
     }

@@ -1,7 +1,12 @@
 import {useState} from "preact/hooks";
 import {Button, ButtonType} from "../../components/button";
 import {useProjectContext} from "../../contexts/projects.context";
-import type {ICreateProjectRequest} from "../../models/projects.models";
+import type {
+    ICreateProjectCredentialsRequest,
+    ICreateProjectMembersRequest,
+    ICreateProjectMetadataRequest,
+    ICreateProjectRequest
+} from "../../models/projects.models";
 import styles from "./style.module.scss";
 import {Modal} from "../../components/modal";
 import {CreateProjectForm} from "../../components/projects/createProjectForm";
@@ -10,6 +15,8 @@ import {ProjectsTable} from "../../components/projects/projectsTable";
 import React from "react";
 import {CreateProjectCredentialsForm} from "../../components/projects/createProjectCredentailsForm";
 import {AddMembersForm} from "../../components/projects/addMembersForm";
+import type {IMemberRequest} from "../../models/user.models.ts";
+import type {DatabaseAuthData} from "../../components/projects/createProjectCredentailsForm/databaseCredentialsForm";
 
 export interface ICreateProjectFormData {
     projectName: string;
@@ -35,13 +42,20 @@ export const ProjectsPage = () => {
 
     const [newCredentialsData, setNewCredentialsData] = useState<ICreateProjectCredentialsData>({
         projectPassword: "",
-        databaseAuth: {},
+        databaseAuth: {
+            type: "psql",
+            host: "",
+            port: 5432,
+            username: "",
+            password: "",
+            databaseName: "",
+        },
     });
 
     const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(true);
     const maxSteps = 2;
     const [step, setStep] = useState<number>(1);
-    const [members, setMembers] = useState<number[]>([]);
+    const [members, setMembers] = useState<IMemberRequest[]>([]);
 
     const openCreateProjectModal = () => {
         setIsCreateProjectModalOpen(true);
@@ -52,11 +66,27 @@ export const ProjectsPage = () => {
     }
 
     const handleSubmit = () => {
-        const cpr: ICreateProjectRequest = {
+
+        const cpmr: ICreateProjectMetadataRequest = {
             name: newProjectData.projectName,
             description: newProjectData.description,
             visibility: newProjectData.visibility,
             connectionType: Number(newProjectData.connectionType),
+        }
+
+        const cpcr : ICreateProjectCredentialsRequest = {
+            projectPassword: newCredentialsData.projectPassword,
+            databaseAuth: newCredentialsData.databaseAuth,
+        }
+
+        const cpmer: ICreateProjectMembersRequest = {
+            members: members.map((member) => member.id),
+        }
+
+        const cpr: ICreateProjectRequest = {
+            metadata: cpmr,
+            credentials: cpcr,
+            members: cpmer,
         }
 
         createProject(cpr).then((res) => {
@@ -158,8 +188,8 @@ export const ProjectsPage = () => {
 
 interface IProjectStepperProps {
     step: number;
-    members: number[];
-    setMembers: React.Dispatch<React.SetStateAction<number[]>>;
+    members: IMemberRequest[];
+    setMembers: React.Dispatch<React.SetStateAction<IMemberRequest[]>>;
 
     newProjectData: ICreateProjectFormData,
     setNewProjectData: React.Dispatch<React.SetStateAction<ICreateProjectFormData>>;

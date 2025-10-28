@@ -2,7 +2,10 @@ package projects
 
 import (
 	"backend/core"
+	"encoding/json"
+	"fmt"
 	"github.com/jmoiron/sqlx"
+	"strings"
 )
 
 type Repository struct {
@@ -79,11 +82,11 @@ func (r *Repository) CreateProject(cpr CreateProjectRequest, ownerID int) (Proje
 
 	params := map[string]any{
 		"owner_id":        ownerID,
-		"name":            cpr.Name,
-		"description":     cpr.Description,
+		"name":            cpr.Metadata.Name,
+		"description":     cpr.Metadata.Description,
 		"active":          true,
-		"visibility":      cpr.Visibility,
-		"connection_type": cpr.ConnectionType,
+		"visibility":      cpr.Metadata.Visibility,
+		"connection_type": cpr.Metadata.ConnectionType,
 	}
 
 	err = stmt.Get(&project, params)
@@ -91,6 +94,53 @@ func (r *Repository) CreateProject(cpr CreateProjectRequest, ownerID int) (Proje
 		return project, err
 	}
 	return project, err
+}
+
+func (r *Repository) CreateProjectCredentials(cpcr CreateProjectCredentialsRequest, projectID int) error {
+	jsonData, err := json.Marshal(cpcr.DatabaseAuth)
+	if err != nil {
+		return err
+	}
+
+	stmt, err := r.db.PrepareNamed(`
+		INSERT INTO projects_credentials (project_id, project_password, database_auth)
+		VALUES (:projectID, :projectPassword, :databaseAuth)`)
+	if err != nil {
+		return err
+	}
+
+	params := map[string]any{
+		"projectID":       projectID,
+		"projectPassword": cpcr.ProjectPassword,
+		"databaseAuth":    jsonData,
+	}
+
+	_, err = stmt.Exec(params)
+	return err
+
+	return nil
+}
+
+func (r *Repository) CreateProjectMembers(cpmr CreateProjectMembersRequest, projectID int) error {
+	if len(cpmr.Members) == 0 {
+		return nil
+	}
+
+	valueStrings := make([]string, 0, len(cpmr.Members))
+	valueArgs := make([]interface{}, 0, len(cpmr.Members)*3)
+
+	for i, memberID := range cpmr.Members {
+		valueStrings = append(valueStrings, fmt.Sprintf("($%d, $%d, $%d)", i*3+1, i*3+2, i*3+3))
+		valueArgs = append(valueArgs, memberID, projectID, nil)
+	}
+
+	stmt := fmt.Sprintf(`
+		INSERT INTO user_role (user_id, project_id, role)
+		VALUES %s
+	`, strings.Join(valueStrings, ","))
+
+	_, err := r.db.Exec(stmt, valueArgs...)
+	return err
 }
 
 func (r *Repository) UpdateProject(p *Projects) error {
