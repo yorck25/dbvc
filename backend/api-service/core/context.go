@@ -26,22 +26,20 @@ type AppContext struct {
 	db     *sqlx.DB
 }
 
-func (c *WebContext) GetUserId() int {
+func (c *WebContext) GetUserId() (int, error) {
 	authHeader := c.Request().Header.Get("Authorization")
 	if !strings.HasPrefix(authHeader, "Bearer ") {
-		c.BadRequest(errors.New("no Bearer token found in Authorization header").Error())
-		return 0
+		return 0, c.BadRequest(errors.New("no Bearer token found in Authorization header").Error())
 	}
 
 	tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 
 	userId, err := auth.DecodeToken(tokenString, c.config.JwtSecretKey)
 	if err != nil {
-		c.Unauthorized(err.Error())
-		return 0
+		return 0, c.Unauthorized(err.Error())
 	}
 
-	return userId
+	return userId, nil
 }
 
 func (ac *AppContext) GetDb() *sqlx.DB {

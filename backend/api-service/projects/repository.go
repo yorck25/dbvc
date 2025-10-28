@@ -183,3 +183,77 @@ func (r *Repository) DeleteProject(id int) error {
 	_, err = stmt.Exec(params)
 	return err
 }
+
+func (r *Repository) GetUsersForProject(projectID int) (UsersForProjectResponse, error) {
+	var response UsersForProjectResponse
+
+	rows, err := r.db.NamedQuery(`
+		SELECT ul.username
+		FROM users u
+		JOIN user_login ul ON u.id = ul.user_id
+		JOIN user_role ur ON u.id = ur.user_id
+		WHERE ur.project_id = :projectID
+		ORDER BY ul.username ASC
+	`, map[string]any{"projectID": projectID})
+	if err != nil {
+		return response, err
+	}
+	defer rows.Close()
+
+	var usernames []string
+	for rows.Next() {
+		var username string
+		if err := rows.Scan(&username); err != nil {
+			return response, err
+		}
+		usernames = append(usernames, username)
+	}
+
+	response.TotalCount = len(usernames)
+	if len(usernames) > 5 {
+		response.FirstFiveMembers = usernames[:5]
+	} else {
+		response.FirstFiveMembers = usernames
+	}
+
+	return response, nil
+}
+
+func (r *Repository) GetAllProjectsWithUsersForUser(userID int) ([]ProjectWithUsers, error) {
+	var projects []Projects
+
+	stmt, err := r.db.PrepareNamed(`
+		SELECT p.*
+		FROM projects p
+		JOIN user_role ur ON p.id = ur.project_id
+		WHERE ur.user_id = :userID
+		ORDER BY p.created_at DESC
+	`)
+
+	if err != nil {
+		return nil, err
+	}
+
+	params := map[string]any{
+		"userID": userID,
+	}
+
+	err = stmt.Select(&projects, params)
+	if err != nil {
+		return nil, err
+	}
+
+	results := make([]ProjectWithUsers, 0, len(projects))
+	for _, p := range projects {
+		users, err := r.GetUsersForProject(p.ID)
+		if err != nil {
+			return nil, err
+		}
+		results = append(results, ProjectWithUsers{
+			Project: p,
+			Users:   users,
+		})
+	}
+
+	return results, nil
+}

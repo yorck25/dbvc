@@ -35,3 +35,13 @@ type CreateProjectCredentialsRequest struct {
 type CreateProjectMembersRequest struct {
 	Members []int `json:"members"`
 }
+
+type UsersForProjectResponse struct {
+	FirstFiveMembers []string `json:"firstFiveMembers"`
+	TotalCount       int      `json:"totalCount"`
+}
+
+type ProjectWithUsers struct {
+	Project Projects                `json:"project"`
+	Users   UsersForProjectResponse `json:"users"`
+}

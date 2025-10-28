@@ -10,7 +10,10 @@ import (
 )
 
 func HandleGetConnectionTypes(ctx *core.WebContext) error {
-	_ = ctx.GetUserId()
+	_, err := ctx.GetUserId()
+	if err != nil {
+		return err
+	}
 
 	repo := NewRepository(ctx)
 

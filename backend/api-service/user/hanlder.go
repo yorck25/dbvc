@@ -107,7 +107,10 @@ func HandleLogin(ctx *core.WebContext) error {
 }
 
 func HandleGetProfile(ctx *core.WebContext) error {
-	userID := ctx.GetUserId()
+	userID, err := ctx.GetUserId()
+	if err != nil {
+		return err
+	}
 
 	repo := NewRepository(ctx)
 	user, err := repo.GetUserByID(userID)
@@ -119,7 +122,10 @@ func HandleGetProfile(ctx *core.WebContext) error {
 }
 
 func HandleUpdateProfile(ctx *core.WebContext) error {
-	userID := ctx.GetUserId()
+	userID, err := ctx.GetUserId()
+	if err != nil {
+		return err
+	}
 
 	var req UpdateProfileRequest
 	if err := ctx.Bind(&req); err != nil {
@@ -150,7 +156,10 @@ func HandleUpdateProfile(ctx *core.WebContext) error {
 }
 
 func HandleChangePassword(ctx *core.WebContext) error {
-	userID := ctx.GetUserId()
+	userID, err := ctx.GetUserId()
+	if err != nil {
+		return err
+	}
 
 	var req ChangePasswordRequest
 	if err := ctx.Bind(&req); err != nil {

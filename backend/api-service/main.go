@@ -34,7 +34,8 @@ func main() {
 
 	app.GET("/users/search", user.HandleSearchMembers)
 
-	app.GET("/projects", projects.HandleGetAllProjects)
+	app.GET("/projects", projects.GetAllProjectsWithUsersForUser)
+	app.GET("/projects/all", projects.HandleGetAllProjects)
 	app.GET("/projects/active", projects.HandleGetActiveProjects)
 	app.GET("/projects/:id", projects.HandleGetProjectByID)
 	app.POST("/projects", projects.HandleCreateProject)

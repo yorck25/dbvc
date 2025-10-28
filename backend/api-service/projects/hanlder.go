@@ -6,7 +6,10 @@ import (
 )
 
 func HandleCreateProject(ctx *core.WebContext) error {
-	userID := ctx.GetUserId()
+	userID, err := ctx.GetUserId()
+	if err != nil {
+		return err
+	}
 
 	var cpr CreateProjectRequest
 	if err := ctx.Bind(&cpr); err != nil {
@@ -30,11 +33,24 @@ func HandleCreateProject(ctx *core.WebContext) error {
 		return ctx.InternalError("Error Create Project Members: " + err.Error())
 	}
 
-	return ctx.Sucsess(project)
+	users, err := repo.GetUsersForProject(project.ID)
+	if err != nil {
+		return ctx.InternalError("Error Fetching Project Users: " + err.Error())
+	}
+
+	projectWithUsers := ProjectWithUsers{
+		Project: project,
+		Users:   users,
+	}
+
+	return ctx.Sucsess(projectWithUsers)
 }
 
 func HandleGetAllProjects(ctx *core.WebContext) error {
-	_ = ctx.GetUserId()
+	_, err := ctx.GetUserId()
+	if err != nil {
+		return err
+	}
 
 	repo := NewRepository(ctx)
 	projects, err := repo.GetAllProjects()
@@ -45,7 +61,10 @@ func HandleGetAllProjects(ctx *core.WebContext) error {
 }
 
 func HandleGetProjectByID(ctx *core.WebContext) error {
-	_ = ctx.GetUserId()
+	_, err := ctx.GetUserId()
+	if err != nil {
+		return err
+	}
 
 	idParam := ctx.Param("id")
 	id, err := strconv.Atoi(idParam)
@@ -63,7 +82,10 @@ func HandleGetProjectByID(ctx *core.WebContext) error {
 }
 
 func HandleUpdateProject(ctx *core.WebContext) error {
-	_ = ctx.GetUserId()
+	_, err := ctx.GetUserId()
+	if err != nil {
+		return err
+	}
 
 	idParam := ctx.Param("id")
 	id, err := strconv.Atoi(idParam)
@@ -86,7 +108,10 @@ func HandleUpdateProject(ctx *core.WebContext) error {
 }
 
 func HandleDeleteProject(ctx *core.WebContext) error {
-	_ = ctx.GetUserId()
+	_, err := ctx.GetUserId()
+	if err != nil {
+		return err
+	}
 
 	idParam := ctx.Param("id")
 	id, err := strconv.Atoi(idParam)
@@ -103,7 +128,10 @@ func HandleDeleteProject(ctx *core.WebContext) error {
 }
 
 func HandleGetActiveProjects(ctx *core.WebContext) error {
-	_ = ctx.GetUserId()
+	_, err := ctx.GetUserId()
+	if err != nil {
+		return err
+	}
 
 	repo := NewRepository(ctx)
 	projects, err := repo.GetActiveProjects()
@@ -111,4 +139,18 @@ func HandleGetActiveProjects(ctx *core.WebContext) error {
 		return ctx.InternalError(err.Error())
 	}
 	return ctx.Sucsess(projects)
+}
+
+func GetAllProjectsWithUsersForUser(ctx *core.WebContext) error {
+	userID, err := ctx.GetUserId()
+	if err != nil {
+		return err
+	}
+
+	repo := NewRepository(ctx)
+	projectWithMembers, err := repo.GetAllProjectsWithUsersForUser(userID)
+	if err != nil {
+		return ctx.InternalError(err.Error())
+	}
+	return ctx.Sucsess(projectWithMembers)
 }
