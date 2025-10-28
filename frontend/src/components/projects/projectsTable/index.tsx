@@ -4,27 +4,29 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
-import type {IProject} from "../../../models/projects.models.ts";
+import type {IProjectWithUsers} from "../../../models/projects.models.ts";
 import {EllipsisVerticalIcon} from "../../icons";
 import TableContainer from "@mui/material/TableContainer";
 import styles from "./style.module.scss";
 import {useConnectionTypesContext} from "../../../contexts/connection-types.context.tsx";
-import {useUserContext} from "../../../contexts/users.context.tsx";
+import type {IUsersForProjectResponse} from "../../../models/user.models.ts";
 
-export const ProjectsTable = ({projects}: { projects: IProject[] }) => {
-    const {users} = useUserContext();
+export const ProjectsTable = ({projects}: { projects: IProjectWithUsers[] }) => {
     const {connectionTypes} = useConnectionTypesContext();
 
-    const dummyMembers = users;
+    const renderMembers = (users: IUsersForProjectResponse) => {
+        const amountOfIcons: number = 5;
 
-    const renderMembers = () => {
         return (
             <div className={styles.members_container}>
-                {dummyMembers.slice(0, 5).map((member: string) => (
+
+                {users.firstFiveMembers.slice(0, amountOfIcons).map((member: string) => (
                     renderMember(member[0])
                 ))}
 
-                {renderMember("+" + (dummyMembers.length - 5))}
+                {users.totalCount > amountOfIcons && (
+                    renderMember("+" + (users.totalCount - amountOfIcons))
+                )}
             </div>
         )
     }
@@ -67,17 +69,17 @@ export const ProjectsTable = ({projects}: { projects: IProject[] }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {projects?.map((row: IProject) => (
+                        {projects?.map((row: IProjectWithUsers) => (
                             <TableRow
-                                key={row.id}
+                                key={row.project.id}
                                 sx={{'&:last-child td, &:last-child th': {border: 0}}}
                             >
                                 <TableCell align={"left"} component="th" scope="row">
-                                    {row.name}
+                                    {row.project.name}
                                 </TableCell>
-                                <TableCell align={"left"}>{row.description}</TableCell>
-                                <TableCell align={"left"}>{getConnectionType(row.connectionType)}</TableCell>
-                                <TableCell align={"left"}>{renderMembers()}</TableCell>
+                                <TableCell align={"left"}>{row.project.description}</TableCell>
+                                <TableCell align={"left"}>{getConnectionType(row.project.connectionType)}</TableCell>
+                                <TableCell align={"left"}>{renderMembers(row.users)}</TableCell>
                                 <TableCell align={"left"}><span
                                     className={styles.option_button}>{EllipsisVerticalIcon()}</span></TableCell>
                             </TableRow>

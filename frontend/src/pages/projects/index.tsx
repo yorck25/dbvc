@@ -9,14 +9,10 @@ import type {
 } from "../../models/projects.models";
 import styles from "./style.module.scss";
 import {Modal} from "../../components/modal";
-import {CreateProjectForm} from "../../components/projects/createProjectForm";
 import {ProjectVisibilityType} from "../../enums/projects.enum.ts";
 import {ProjectsTable} from "../../components/projects/projectsTable";
-import React from "react";
-import {CreateProjectCredentialsForm} from "../../components/projects/createProjectCredentailsForm";
-import {AddMembersForm} from "../../components/projects/addMembersForm";
 import type {IMemberRequest} from "../../models/user.models.ts";
-import type {DatabaseAuthData} from "../../components/projects/createProjectCredentailsForm/databaseCredentialsForm";
+import {ProjectStepper} from "../../components/projects/projectStepper";
 
 export interface ICreateProjectFormData {
     projectName: string;
@@ -52,9 +48,9 @@ export const ProjectsPage = () => {
         },
     });
 
-    const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(true);
+    const [isCreateProjectModalOpen, setIsCreateProjectModalOpen] = useState(false);
     const maxSteps = 2;
-    const [step, setStep] = useState<number>(1);
+    const [step, setStep] = useState<number>(0);
     const [members, setMembers] = useState<IMemberRequest[]>([]);
 
     const openCreateProjectModal = () => {
@@ -74,7 +70,7 @@ export const ProjectsPage = () => {
             connectionType: Number(newProjectData.connectionType),
         }
 
-        const cpcr : ICreateProjectCredentialsRequest = {
+        const cpcr: ICreateProjectCredentialsRequest = {
             projectPassword: newCredentialsData.projectPassword,
             databaseAuth: newCredentialsData.databaseAuth,
         }
@@ -183,41 +179,5 @@ export const ProjectsPage = () => {
                 />
             )}
         </div>
-    )
-}
-
-interface IProjectStepperProps {
-    step: number;
-    members: IMemberRequest[];
-    setMembers: React.Dispatch<React.SetStateAction<IMemberRequest[]>>;
-
-    newProjectData: ICreateProjectFormData,
-    setNewProjectData: React.Dispatch<React.SetStateAction<ICreateProjectFormData>>;
-
-    newCredentialsData: ICreateProjectCredentialsData,
-    setNewCredentialsData: React.Dispatch<React.SetStateAction<ICreateProjectCredentialsData>>;
-}
-
-const ProjectStepper = (props: IProjectStepperProps) => {
-    return (
-        <>
-
-            {props.step === 0 && (
-                <CreateProjectForm
-                    newProjectData={props.newProjectData}
-                    setNewProjectData={props.setNewProjectData}
-                />
-            )}
-
-            {props.step == 1 && (
-                <CreateProjectCredentialsForm connectionType={props.newProjectData.connectionType}
-                                              newCredentialsData={props.newCredentialsData}
-                                              setNewCredentialsData={props.setNewCredentialsData}/>
-            )}
-
-            {props.step == 2 && (
-                <AddMembersForm  members={props.members} setMembers={props.setMembers}/>
-            )}
-        </>
     )
 }

@@ -31,3 +31,8 @@ export interface IMemberRequest {
     email: string;
     active: boolean;
 }
+
+export interface IUsersForProjectResponse {
+    firstFiveMembers: string[];
+    totalCount: number;
+}

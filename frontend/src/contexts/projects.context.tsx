@@ -1,5 +1,5 @@
 import {createContext, useContext, useEffect, useState, type Dispatch, type FC, type ReactNode} from 'react';
-import type {ICreateProjectRequest, IProject} from '../models/projects.models';
+import type {ICreateProjectRequest, IProjectWithUsers} from '../models/projects.models';
 import {NetworkAdapter, setAuthHeader} from "../lib/networkAdapter.tsx";
 
 interface IProjectContext {
@@ -12,7 +12,7 @@ interface IProjectContext {
 const ProjectContext = createContext<IProjectContext | undefined>(undefined);
 
 export const ProjectContextProvider: FC<{ children: ReactNode }> = ({children}) => {
-    const [projects, setProjects] = useState<IProject[]>();
+    const [projects, setProjects] = useState<IProjectWithUsers[]>();
 
     useEffect(() => {
         fetchProjects();
@@ -29,7 +29,7 @@ export const ProjectContextProvider: FC<{ children: ReactNode }> = ({children}) 
 
         fetch('http://localhost:8080/projects', requestOptions)
             .then(res => res.json())
-            .then((data: IProject[]) => {
+            .then((data: IProjectWithUsers[]) => {
                 setProjects(data);
             });
     }
@@ -51,7 +51,7 @@ export const ProjectContextProvider: FC<{ children: ReactNode }> = ({children}) 
                 return false;
             }
 
-            const data: IProject = await res.json();
+            const data: IProjectWithUsers = await res.json();
             setProjects((prevProjects) => prevProjects ? [...prevProjects, data] : [data]);
             return true;
         } catch (e) {
