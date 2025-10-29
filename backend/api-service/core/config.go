@@ -9,14 +9,16 @@ import (
 )
 
 func LoadConfig() (*common.Config, error) {
-	err := godotenv.Load()
-	if err != nil {
-		return nil, err
-	}
-
 	config := &common.Config{}
 
-	key := os.Getenv("SECRET_KEY")
+	if os.Getenv("KUBERNETES_SERVICE_HOST") == "" {
+		err := godotenv.Load()
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	key := os.Getenv("JWT_SECRET")
 	if key == "" {
 		return nil, errors.New("no secret key")
 	}
@@ -28,9 +30,13 @@ func LoadConfig() (*common.Config, error) {
 	}
 	config.PsqlHost = psqlHost
 
-	psqlPort, err := strconv.Atoi(os.Getenv("PSQL_PORT"))
-	if err != nil {
+	psqlPortStr := os.Getenv("PSQL_PORT")
+	if psqlPortStr == "" {
 		return nil, errors.New("no psql port")
+	}
+	psqlPort, err := strconv.Atoi(psqlPortStr)
+	if err != nil {
+		return nil, errors.New("invalid psql port")
 	}
 	config.PsqlPort = psqlPort
 

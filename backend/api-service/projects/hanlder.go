@@ -2,6 +2,8 @@ package projects
 
 import (
 	"backend/core"
+	b64 "encoding/base64"
+	"golang.org/x/crypto/bcrypt"
 	"strconv"
 )
 
@@ -21,6 +23,19 @@ func HandleCreateProject(ctx *core.WebContext) error {
 	project, err := repo.CreateProject(cpr, userID)
 	if err != nil {
 		return ctx.InternalError("Error Create Project Metadata: " + err.Error())
+	}
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(cpr.Credentials.ProjectPassword), bcrypt.DefaultCost)
+	if err != nil {
+		return ctx.InternalError("failed to hash password")
+	}
+
+	cpr.Credentials.ProjectPassword = string(hashedPassword)
+
+	delete(cpr.Credentials.DatabaseAuth, "type")
+	for k, v := range cpr.Credentials.DatabaseAuth {
+		value := b64.StdEncoding.EncodeToString([]byte(v))
+		cpr.Credentials.DatabaseAuth[k] = value
 	}
 
 	err = repo.CreateProjectCredentials(cpr.Credentials, project.ID)

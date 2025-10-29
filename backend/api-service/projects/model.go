@@ -28,8 +28,8 @@ type CreateProjectMetadataRequest struct {
 }
 
 type CreateProjectCredentialsRequest struct {
-	ProjectPassword string      `json:"projectPassword"`
-	DatabaseAuth    interface{} `json:"databaseAuth"`
+	ProjectPassword string            `json:"projectPassword"`
+	DatabaseAuth    map[string]string `json:"databaseAuth"`
 }
 
 type CreateProjectMembersRequest struct {
