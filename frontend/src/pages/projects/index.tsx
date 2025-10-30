@@ -63,6 +63,8 @@ export const ProjectsPage = () => {
 
     const handleSubmit = () => {
 
+        newCredentialsData.databaseAuth.port = String(newCredentialsData.databaseAuth.port);
+
         const cpmr: ICreateProjectMetadataRequest = {
             name: newProjectData.projectName,
             description: newProjectData.description,
