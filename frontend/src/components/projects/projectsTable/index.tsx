@@ -10,9 +10,16 @@ import TableContainer from "@mui/material/TableContainer";
 import styles from "./style.module.scss";
 import {useConnectionTypesContext} from "../../../contexts/connection-types.context.tsx";
 import type {IUsersForProjectResponse} from "../../../models/user.models.ts";
+import {useState} from "react";
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
+import {useLocation, useNavigate} from "react-router-dom";
+import type {TargetedMouseEvent} from "preact";
 
 export const ProjectsTable = ({projects}: { projects: IProjectWithUsers[] }) => {
     const {connectionTypes} = useConnectionTypesContext();
+    const navigate = useNavigate();
+    let location = useLocation()
 
     const renderMembers = (users: IUsersForProjectResponse) => {
         const amountOfIcons: number = 5;
@@ -55,6 +62,35 @@ export const ProjectsTable = ({projects}: { projects: IProjectWithUsers[] }) => 
         return connectionType.typeName;
     }
 
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const openMenu = Boolean(anchorEl);
+    const [selectedId, setSelectedId] = useState<number | null>(null);
+
+    const handleMenuOpen = (event: MouseEvent, id: number) => {
+        setAnchorEl((event as TargetedMouseEvent<HTMLElement>).currentTarget);
+        setSelectedId(id);
+    };
+
+    const handleMenuClose = (
+        e: MouseEvent
+    ) => {
+        const target = e.currentTarget as HTMLButtonElement;
+        const {id} = target;
+
+        console.log(selectedId)
+
+        if (id === "open") {
+            navigate(location.pathname + `/${selectedId}`);
+        }
+
+        if (id === "edit") {
+            console.log("edit project");
+        }
+
+        setAnchorEl(null);
+        setSelectedId(null);
+    };
+
     return (
         <div className={styles.projects_table}>
             <TableContainer component={Paper}>
@@ -77,11 +113,32 @@ export const ProjectsTable = ({projects}: { projects: IProjectWithUsers[] }) => 
                                 <TableCell align={"left"} component="th" scope="row">
                                     {row.project.name}
                                 </TableCell>
+                                <TableCell align={"left"}>{row.project.id}</TableCell>
                                 <TableCell align={"left"}>{row.project.description}</TableCell>
                                 <TableCell align={"left"}>{getConnectionType(row.project.connectionType)}</TableCell>
                                 <TableCell align={"left"}>{renderMembers(row.users)}</TableCell>
-                                <TableCell align={"left"}><span
-                                    className={styles.option_button}>{EllipsisVerticalIcon()}</span></TableCell>
+                                <TableCell align={"left"}>
+                                    <span
+                                        className={styles.option_button}
+                                        onClick={(e) => handleMenuOpen(e, row.project.id)}>
+                                        {EllipsisVerticalIcon()}
+                                    </span>
+
+                                    <Menu
+                                        id="basic-menu"
+                                        anchorEl={anchorEl}
+                                        open={openMenu}
+                                        onClose={handleMenuClose}
+                                        slotProps={{
+                                            list: {
+                                                'aria-labelledby': 'basic-button',
+                                            },
+                                        }}
+                                    >
+                                        <MenuItem id={"open"} onClick={handleMenuClose}>Open</MenuItem>
+                                        <MenuItem id={"edit"} onClick={handleMenuClose}>Edit</MenuItem>
+                                    </Menu>
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

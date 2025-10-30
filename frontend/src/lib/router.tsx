@@ -7,6 +7,7 @@ import {Sidebar} from "../components/sidebar";
 import {ProjectContextProvider} from "../contexts/projects.context";
 import {useEffect} from "react";
 import {useAppContext} from "../contexts/app.context.tsx";
+import {ProjectDashboard} from "../pages/projectDashboard";
 
 export const Router = () => {
     const navigate = useNavigate();
@@ -23,6 +24,7 @@ export const Router = () => {
             <Route element={<MainLayout/>}>
                 <Route path={"/"} element={<></>} />
                 <Route path="/projects" element={<ProjectsPage/>}/>
+                <Route path="/projects/:projectId" element={<ProjectDashboard/>}/>
             </Route>
 
             <Route element={<AuthLayout/>}>
