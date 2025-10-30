@@ -1,4 +1,4 @@
-@use "../../styles/variables.scss";
+@use "../../styles/variables";
 @use "../../styles/mixins" as mixin;
 
 .project_dashboard_page {
@@ -23,6 +23,37 @@
 
     .button_wrapper {
       max-width: 150px;
+    }
+  }
+
+  .navigation_bar {
+    width: 100%;
+    border-bottom: 1px solid variables.$border-color;
+    padding: variables.$spacing-md 0 ;
+
+    .navigation_bar_item_list {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      list-style: none;
+      overflow-x: auto;
+      gap: variables.$spacing-xl;
+      margin: 0;
+      padding: 0;
+
+      .navigation_bar_item_list_item {
+        color: variables.$gray-700;
+
+        &:hover {
+          color: variables.$highlight-blue;
+          cursor: pointer;
+        }
+
+        &.active_tab {
+          color: variables.$highlight-blue;
+          border-bottom: 1px solid variables.$highlight-blue;
+        }
+      }
     }
   }
 }
