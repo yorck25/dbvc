@@ -26,6 +26,8 @@ export const ProjectDashboard = () => {
                 if (fetched) setCurrentProject(fetched);
             });
         }
+
+        console.log(currentProject);
     }, [projectId, projects]);
 
     const getNavigationItemClass = (id: string) => {
@@ -81,11 +83,38 @@ export const ProjectDashboard = () => {
                 </ul>
             </nav>
 
-            {currentProject ? (
-                <p>{currentProject.project?.name ?? currentProject.project.name ?? "No name"}</p>
-            ) : (
-                <p>Loading...</p>
-            )}
+            <div className={styles.content_container}>
+                {activeTab === "Overview" && (
+                    <>Not implemented yet.</>
+                )}
+
+                {activeTab === "Database" && (
+                    <ProjectDashboardDatabase />
+                )}
+
+                {activeTab === "Members" && (
+                    <>Not implemented yet.</>
+                )}
+
+                {activeTab === "Tasks" && (
+                    <>Not implemented yet.</>
+                )}
+
+                {activeTab === "Discussion" && (
+                    <>Not implemented yet.</>
+                )}
+
+                {activeTab === "Settings" && (
+                    <>Not implemented yet.</>
+                )}
+            </div>
         </div>
     );
 };
+
+export const ProjectDashboardDatabase = () => {
+    return (
+        <div>
+        </div>
+    )
+}

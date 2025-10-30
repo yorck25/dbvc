@@ -6,6 +6,9 @@
   background-color: #fafafa;
   min-height: 100vh;
 
+  display: flex;
+  flex-direction: column;
+
   .header {
     max-width: 100%;
     display: flex;
@@ -55,5 +58,11 @@
         }
       }
     }
+  }
+
+  .content_container {
+    flex: 1 1 0;
+    max-height: 80%;
+    overflow: auto;
   }
 }

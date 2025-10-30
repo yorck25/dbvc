@@ -31,10 +31,12 @@
 }
 
 @mixin base-page-style {
+  flex: 1;
   width: auto;
-  height: 100dvb;
+  min-height: 100dvh;
   padding: variables.$spacing-md;
   background: variables.$primary-background-color;
+  box-sizing: border-box;
 
   @content;
 }
