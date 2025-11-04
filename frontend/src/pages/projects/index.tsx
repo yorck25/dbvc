@@ -153,7 +153,11 @@ export const ProjectsPage = () => {
             </div>
 
             <div className={styles.table_wrapper}>
-                <ProjectsTable projects={projects}/>
+                {projects ? (
+                    <ProjectsTable projects={projects}/>
+                ): (
+                    <div>No Projets to display.</div>
+                )}
             </div>
 
             {isCreateProjectModalOpen && (

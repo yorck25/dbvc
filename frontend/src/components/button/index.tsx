@@ -19,6 +19,7 @@ interface Props {
     dark?: boolean;
     disabled?: boolean;
     isLoading?: boolean;
+    htmlType?: "button" | "submit" | "reset";
 }
 
 export const Button = (
@@ -33,6 +34,7 @@ export const Button = (
         dark = false,
         disabled = false,
         isLoading = false,
+        htmlType = "button",
     }: Props) => {
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -45,6 +47,7 @@ export const Button = (
             disabled={disabled}
             aria-label={ariaLabel}
             onClick={handleClick}
+            type={htmlType}
             className={`${styles[type]} ${large ? styles.large : ''} ${dark ? styles.dark : ''}`}
         >
             {isLoading ? (

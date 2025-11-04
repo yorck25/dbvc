@@ -7,8 +7,9 @@ import {
     type FC,
     type ReactNode,
 } from "react";
-import type { ICreateProjectRequest, IProjectWithUsers } from "../models/projects.models";
-import { NetworkAdapter, setAuthHeader } from "../lib/networkAdapter.tsx";
+import type {ICreateProjectRequest, IProjectWithUsers} from "../models/projects.models";
+import {NetworkAdapter, setAuthHeader} from "../lib/networkAdapter.tsx";
+import type {DatabaseAuthData} from "../components/projects/createProjectCredentailsForm/databaseCredentialsForm";
 
 interface IProjectContext {
     projects: IProjectWithUsers[] | undefined;
@@ -16,11 +17,12 @@ interface IProjectContext {
     getProjectById: (projectId: number) => IProjectWithUsers | undefined;
     ensureProjectLoaded: (projectId: number) => Promise<IProjectWithUsers | undefined>;
     createProject: (cpr: ICreateProjectRequest) => Promise<boolean>;
+    testConnection: (authData: DatabaseAuthData) => Promise<boolean>;
 }
 
 const ProjectContext = createContext<IProjectContext | undefined>(undefined);
 
-export const ProjectContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
+export const ProjectContextProvider: FC<{ children: ReactNode }> = ({children}) => {
     const [projects, setProjects] = useState<IProjectWithUsers[]>();
 
     useEffect(() => {
@@ -104,12 +106,34 @@ export const ProjectContextProvider: FC<{ children: ReactNode }> = ({ children }
         }
     };
 
+    const testConnection = async (authData: DatabaseAuthData): Promise<boolean> => {
+        const authObj = {
+            databaseAuth: {
+                ...authData,
+                port: String(authData.port),
+            },
+        };
+
+        const headers = setAuthHeader();
+        headers.append("Content-Type", "application/json");
+
+        const requestOptions: RequestInit = {
+            method: NetworkAdapter.POST,
+            headers: headers,
+            body: JSON.stringify(authObj),
+        }
+
+        const res = await fetch("http://localhost:8080/projects/test-connection", requestOptions);
+        return res.ok;
+    }
+
     const appContextValue: IProjectContext = {
         projects,
         setProjects,
         getProjectById,
         ensureProjectLoaded,
         createProject,
+        testConnection,
     };
 
     return (

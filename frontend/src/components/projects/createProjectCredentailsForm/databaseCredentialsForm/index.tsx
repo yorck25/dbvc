@@ -1,6 +1,8 @@
-import React from "react";
+import React, {useState} from "react";
 import styles from "./style.module.scss";
 import {Input, InputType} from "../../../input";
+import {Button, ButtonType} from "../../../button";
+import {useProjectContext} from "../../../../contexts/projects.context.tsx";
 
 export type DatabaseTypes = "psql" | "mssql" | "mysql";
 
@@ -29,6 +31,9 @@ interface PostgresDatabaseCredentialsProps {
 }
 
 export const DatabaseCredentialsForm = (props: PostgresDatabaseCredentialsProps) => {
+    const {testConnection} = useProjectContext();
+    const [connectionState, setConnectionState] = useState<boolean | undefined>(undefined);
+
     const handleInput = (e: Event) => {
         const target = e.target as HTMLInputElement;
         const {id, value} = target;
@@ -43,6 +48,12 @@ export const DatabaseCredentialsForm = (props: PostgresDatabaseCredentialsProps)
             ...prev,
             [id]: id === "port" ? Number(newValue) : newValue,
         }));
+    }
+
+    const handleTestConnection = () => {
+        testConnection(props.databaseAuthData).then((success: boolean) => {
+            setConnectionState(success);
+        })
     }
 
     return (
@@ -106,6 +117,16 @@ export const DatabaseCredentialsForm = (props: PostgresDatabaseCredentialsProps)
                     label={"Database Name"}
                     inputType={InputType.TEXT}
                 />
+            </div>
+
+            <div className={styles.test_connection}>
+                <div className={styles.button_wrapper}>
+                    <Button type={ButtonType.Text} callback={() => handleTestConnection()} text={"Test Connection"}/>
+                </div>
+
+                {connectionState !== undefined && (
+                    <>{connectionState ? (<p>Connected</p>) : (<p>Fail to connect</p>)}</>
+                )}
             </div>
         </form>
     )

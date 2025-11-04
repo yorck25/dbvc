@@ -1,4 +1,4 @@
-@use "../../../../styles/variables";
+@use "../../../../styles/variables" as var;
 @use "../../../../styles/mixins";
 
 
@@ -7,18 +7,29 @@
 
   .form_row {
     display: grid;
-    padding: variables.$spacing-xs 0;
+    padding: var.$spacing-xs 0;
     grid-template-columns: 1fr 1fr;
-    gap: variables.$spacing-md;
+    gap: var.$spacing-md;
     @media (max-width: 640px) {
       grid-template-columns: 1fr;
     }
   }
 
   .single_form_row {
-    padding: variables.$spacing-sm 0;
+    padding: var.$spacing-sm 0;
     display: flex;
     flex-direction: column;
-    gap: variables.$spacing-sm;
+    gap: var.$spacing-sm;
+  }
+
+  .test_connection {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: var.$spacing-md;
+
+    .button_wrapper {
+      width: 125px;
+    }
   }
 }
