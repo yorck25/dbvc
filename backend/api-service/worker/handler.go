@@ -1,6 +1,7 @@
 package worker
 
 import (
+	"backend/common"
 	"backend/connectors"
 	"backend/core"
 	"backend/release"
@@ -63,7 +64,11 @@ func Upgrade(ctx *core.WebContext, id int) error {
 		return err
 	}
 
-	connector, err := GetConnector(connectionTypeObj.Key)
+	testParams := map[string]string{
+		"host": "127.0.0.1", "port": "5432", "user": "postgres_admin", "password": "test1234", "database": "test",
+	}
+
+	connector, err := common.GetConnector(connectionTypeObj.Key, testParams)
 	if err != nil {
 		return err
 	}

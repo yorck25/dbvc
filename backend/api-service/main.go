@@ -41,6 +41,7 @@ func main() {
 	app.POST("/projects", projects.HandleCreateProject)
 	app.PUT("/projects/:id", projects.HandleUpdateProject)
 	app.DELETE("/projects/:id", projects.HandleDeleteProject)
+	app.POST("/projects/test-connection", projects.HandleTestProjectConnection)
 
 	app.GET("/release/project/all", release.HandleGetReleasesForProject)
 	app.GET("/release/project/latest", release.HandleGetLatestReleasesForProject)
