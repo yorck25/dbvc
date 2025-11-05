@@ -21,3 +21,7 @@ func (m MySQLConnector) ExecuteQuery(db *sql.DB, query string) (*sql.Rows, error
 func (m MySQLConnector) GetVersionQuery() string {
 	return "SELECT VERSION();"
 }
+
+func (m MySQLConnector) GetDatabaseStructure(db *sql.DB) (interface{}, error) {
+	return nil, fmt.Errorf("Not implemented")
+}

@@ -21,3 +21,7 @@ func (m MSSQLConnector) ExecuteQuery(db *sql.DB, query string) (*sql.Rows, error
 func (m MSSQLConnector) GetVersionQuery() string {
 	return "SELECT @@VERSION;"
 }
+
+func (m MSSQLConnector) GetDatabaseStructure(db *sql.DB) (interface{}, error) {
+	return nil, fmt.Errorf("Not implemented")
+}
