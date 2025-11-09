@@ -3,7 +3,7 @@ import React from "react";
 import {useConnectionTypesContext} from "../../../contexts/connection-types.context.tsx";
 import type {IConnectionType} from "../../../models/connection.models.ts";
 import styles from "./style.module.scss";
-import {Input, InputType} from "../../input";
+import {Input, InputType} from "../../ui/input";
 import {type DatabaseAuthData, DatabaseCredentialsForm, type DatabaseTypes,} from "./databaseCredentialsForm";
 
 export const CreateProjectCredentialsForm = ({connectionType, newCredentialsData, setNewCredentialsData}: {

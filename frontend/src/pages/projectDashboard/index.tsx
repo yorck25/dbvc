@@ -1,5 +1,5 @@
 import styles from './style.module.scss';
-import {useParams} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {useProjectContext} from "../../contexts/projects.context.tsx";
 import {useEffect, useState} from "react";
 import type {IProjectWithUsers} from "../../models/projects.models.ts";
@@ -89,7 +89,7 @@ export const ProjectDashboard = () => {
                 )}
 
                 {activeTab === "Database" && (
-                    <ProjectDashboardDatabase />
+                    <DatabaseBrowserNavigate />
                 )}
 
                 {activeTab === "Members" && (
@@ -112,9 +112,13 @@ export const ProjectDashboard = () => {
     );
 };
 
-export const ProjectDashboardDatabase = () => {
+export const DatabaseBrowserNavigate = () => {
+    const navigate = useNavigate();
+    useEffect(() => {
+        navigate(location.pathname + `/database-browser`);
+    }, []);
+
     return (
-        <div>
-        </div>
+        <>Getting routed.</>
     )
 }

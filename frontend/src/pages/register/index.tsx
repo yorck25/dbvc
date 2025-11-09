@@ -2,7 +2,7 @@ import styles from "./style.module.scss";
 import React, { useState } from "react";
 import type {IRegisterRequest} from "../../models/user.models.ts";
 import {useAppContext} from "../../contexts/app.context.tsx";
-import {Button, ButtonType} from "../../components/button";
+import {Button, ButtonType} from "../../components/ui/button";
 import type {TargetedMouseEvent} from "preact";
 import {useNavigate} from "react-router-dom";
 

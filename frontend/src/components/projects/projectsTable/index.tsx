@@ -5,7 +5,6 @@ import TableRow from "@mui/material/TableRow";
 import TableCell from "@mui/material/TableCell";
 import TableBody from "@mui/material/TableBody";
 import type {IProjectWithUsers} from "../../../models/projects.models.ts";
-import {EllipsisVerticalIcon} from "../../icons";
 import TableContainer from "@mui/material/TableContainer";
 import styles from "./style.module.scss";
 import {useConnectionTypesContext} from "../../../contexts/connection-types.context.tsx";
@@ -15,6 +14,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import {useLocation, useNavigate} from "react-router-dom";
 import type {TargetedMouseEvent} from "preact";
+import {EllipsisVerticalIcon} from "../../ui/icons";
 
 export const ProjectsTable = ({projects}: { projects: IProjectWithUsers[] }) => {
     const {connectionTypes} = useConnectionTypesContext();

@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 import styles from "./style.module.scss";
-import {Input, InputType} from "../../../input";
-import {Button, ButtonType} from "../../../button";
 import {useProjectContext} from "../../../../contexts/projects.context.tsx";
+import {Input, InputType} from "../../../ui/input";
+import {Button, ButtonType} from "../../../ui/button";
 
 export type DatabaseTypes = "psql" | "mssql" | "mysql";
 

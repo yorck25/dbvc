@@ -1,9 +1,9 @@
-import {Input} from "../../input";
+import {Input} from "../../ui/input";
 import styles from "./style.module.scss";
 import React, {useEffect, useState} from "react";
-import {Button, ButtonType} from "../../button";
+import {Button, ButtonType} from "../../ui/button";
 import {useUserContext} from "../../../contexts/users.context.tsx";
-import {CloseIcon} from "../../icons";
+import {CloseIcon} from "../../ui/icons";
 import type {IMemberRequest} from "../../../models/user.models.ts";
 
 export interface IAddMembersFormProps {

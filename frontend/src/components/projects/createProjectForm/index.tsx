@@ -1,13 +1,12 @@
-import {Input} from "../../input";
 import styles from "./style.module.scss";
 import {ProjectVisibilityType} from "../../../enums/projects.enum.ts";
-import {Textarea} from "../../textarea";
-import {Select} from "../../select";
 import {useConnectionTypesContext} from "../../../contexts/connection-types.context.tsx";
 import type {IConnectionType} from "../../../models/connection.models.ts";
 import type {ICreateProjectFormData} from "../../../pages/projects";
 import React from "react";
-
+import {Select} from "../../ui/select";
+import {Textarea} from "../../ui/textarea";
+import {Input} from "../../ui/input";
 
 export const CreateProjectForm = ({newProjectData, setNewProjectData}: {
     newProjectData: ICreateProjectFormData,
@@ -82,7 +81,6 @@ export const CreateProjectForm = ({newProjectData, setNewProjectData}: {
                     errorMessage={!newProjectData.visibility ? "Please select a visibility" : ""}
                 />
             </div>
-
         </form>
     )
 }

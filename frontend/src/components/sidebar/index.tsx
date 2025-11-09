@@ -1,8 +1,8 @@
 import {Link, useNavigate} from "react-router-dom";
 import style from "./style.module.scss";
 import {useAppContext} from "../../contexts/app.context";
-import {LogoutIcon} from "../icons";
-import {Input, InputType} from "../input";
+import {LogoutIcon} from "../ui/icons";
+import {Input, InputType} from "../ui/input";
 import {useState} from "react";
 
 export const Sidebar = () => {

@@ -1,5 +1,4 @@
 import {useState} from "preact/hooks";
-import {Button, ButtonType} from "../../components/button";
 import {useProjectContext} from "../../contexts/projects.context";
 import type {
     ICreateProjectCredentialsRequest,
@@ -8,11 +7,12 @@ import type {
     ICreateProjectRequest
 } from "../../models/projects.models";
 import styles from "./style.module.scss";
-import {Modal} from "../../components/modal";
 import {ProjectVisibilityType} from "../../enums/projects.enum.ts";
 import {ProjectsTable} from "../../components/projects/projectsTable";
 import type {IMemberRequest} from "../../models/user.models.ts";
 import {ProjectStepper} from "../../components/projects/projectStepper";
+import {Modal} from "../../components/ui/modal";
+import {Button, ButtonType} from "../../components/ui/button";
 
 export interface ICreateProjectFormData {
     projectName: string;

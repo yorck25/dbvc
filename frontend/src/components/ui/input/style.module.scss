@@ -1,4 +1,4 @@
-@use "../../styles/variables";
+@use "../../../styles/variables";
 
 .input_group {
   display: flex;
@@ -18,8 +18,7 @@
     margin: 0;
   }
 
-  textarea {
-    resize: none;
+  input {
     width: 100%;
     padding: 12px variables.$spacing-md;
     border: 1px solid variables.$border-color;
