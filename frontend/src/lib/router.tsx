@@ -8,6 +8,7 @@ import {ProjectContextProvider} from "../contexts/projects.context";
 import {useEffect} from "react";
 import {useAppContext} from "../contexts/app.context.tsx";
 import {ProjectDashboard} from "../pages/projectDashboard";
+import {DatabaseBrowser} from "../components/databaseBrowser";
 
 export const Router = () => {
     const navigate = useNavigate();
@@ -25,6 +26,8 @@ export const Router = () => {
                 <Route path={"/"} element={<></>} />
                 <Route path="/projects" element={<ProjectsPage/>}/>
                 <Route path="/projects/:projectId" element={<ProjectDashboard/>}/>
+
+                <Route path="/projects/:projectId/database-browser" element={<DatabaseBrowser/>}/>
             </Route>
 
             <Route element={<AuthLayout/>}>
