@@ -9,24 +9,32 @@ import (
 	_ "github.com/lib/pq"
 )
 
-func (p PostgresConnector) Connect() (*sql.DB, error) {
+func (p *PostgresConnector) Connect() (*sql.DB, error) {
 	fmt.Println("Connecting to PostgreSQL...")
 	db, err := sql.Open("postgres", p.ConnectionString)
 	if err != nil {
 		return nil, err
 	}
+
+	p.Client = db
+
 	return db, db.Ping()
 }
 
-func (p PostgresConnector) ExecuteQuery(db *sql.DB, query string) (*sql.Rows, error) {
-	return db.Query(query)
+func (p PostgresConnector) Disconnect() error {
+	err := p.Client.Close()
+	return err
+}
+
+func (p PostgresConnector) ExecuteQuery(query string) (*sql.Rows, error) {
+	return p.Client.Query(query)
 }
 
 func (p PostgresConnector) GetVersionQuery() string {
 	return "SELECT version();"
 }
 
-func (m PostgresConnector) GetDatabaseStructure(db *sql.DB) (interface{}, error) {
+func (m PostgresConnector) GetDatabaseStructure() (*DatabaseStructureResponse, error) {
 	query := `
         SELECT
             TABLE_SCHEMA,
@@ -37,28 +45,23 @@ func (m PostgresConnector) GetDatabaseStructure(db *sql.DB) (interface{}, error)
         ORDER BY TABLE_SCHEMA, TABLE_NAME, ORDINAL_POSITION;
     `
 
-	rows, err := db.Query(query)
+	rows, err := m.Client.Query(query)
 	if err != nil {
 		return nil, err
 	}
 	defer rows.Close()
 
-	type Column struct {
-		ColumnName string `json:"columnName"`
-		DataType   string `json:"dataType"`
+	type TableMap struct {
+		TableName string
+		Columns   []ColumnStructureResponse
 	}
 
-	type Table struct {
-		TableName string   `json:"tableName"`
-		Columns   []Column `json:"columns"`
+	type SchemaMap struct {
+		SchemaName string
+		Tables     map[string]*TableMap
 	}
 
-	type Schema struct {
-		SchemaName string            `json:"schemaName"`
-		Tables     map[string]*Table `json:"tables"`
-	}
-
-	structure := make(map[string]*Schema)
+	schemaMap := make(map[string]*SchemaMap)
 
 	for rows.Next() {
 		var schemaName, tableName, columnName, dataType string
@@ -66,22 +69,25 @@ func (m PostgresConnector) GetDatabaseStructure(db *sql.DB) (interface{}, error)
 			return nil, err
 		}
 
-		if _, ok := structure[schemaName]; !ok {
-			structure[schemaName] = &Schema{
+		if _, ok := schemaMap[schemaName]; !ok {
+			schemaMap[schemaName] = &SchemaMap{
 				SchemaName: schemaName,
-				Tables:     make(map[string]*Table),
+				Tables:     make(map[string]*TableMap),
 			}
 		}
 
-		schema := structure[schemaName]
+		schema := schemaMap[schemaName]
+
 		if _, ok := schema.Tables[tableName]; !ok {
-			schema.Tables[tableName] = &Table{
+			schema.Tables[tableName] = &TableMap{
 				TableName: tableName,
-				Columns:   []Column{},
+				Columns:   []ColumnStructureResponse{},
 			}
 		}
 
-		schema.Tables[tableName].Columns = append(schema.Tables[tableName].Columns, Column{
+		table := schema.Tables[tableName]
+
+		table.Columns = append(table.Columns, ColumnStructureResponse{
 			ColumnName: columnName,
 			DataType:   dataType,
 		})
@@ -91,5 +97,25 @@ func (m PostgresConnector) GetDatabaseStructure(db *sql.DB) (interface{}, error)
 		return nil, err
 	}
 
-	return structure, nil
+	response := DatabaseStructureResponse{
+		Schemas: []SchemaStructureResponse{},
+	}
+
+	for _, schema := range schemaMap {
+		schemaResponse := SchemaStructureResponse{
+			SchemaName: schema.SchemaName,
+			Tables:     []TableStructureResponse{},
+		}
+
+		for _, table := range schema.Tables {
+			schemaResponse.Tables = append(schemaResponse.Tables, TableStructureResponse{
+				TableName: table.TableName,
+				Columns:   table.Columns,
+			})
+		}
+
+		response.Schemas = append(response.Schemas, schemaResponse)
+	}
+
+	return &response, nil
 }
