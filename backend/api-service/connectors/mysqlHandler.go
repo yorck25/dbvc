@@ -14,14 +14,19 @@ func (m MySQLConnector) Connect() (*sql.DB, error) {
 	return db, db.Ping()
 }
 
-func (m MySQLConnector) ExecuteQuery(db *sql.DB, query string) (*sql.Rows, error) {
-	return db.Query(query)
+func (m MySQLConnector) Disconnect() error {
+	err := m.Client.Close()
+	return err
+}
+
+func (m MySQLConnector) ExecuteQuery(query string) (*sql.Rows, error) {
+	return m.Client.Query(query)
 }
 
 func (m MySQLConnector) GetVersionQuery() string {
 	return "SELECT VERSION();"
 }
 
-func (m MySQLConnector) GetDatabaseStructure(db *sql.DB) (interface{}, error) {
+func (m MySQLConnector) GetDatabaseStructure() (*DatabaseStructureResponse, error) {
 	return nil, fmt.Errorf("Not implemented")
 }

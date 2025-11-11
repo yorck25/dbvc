@@ -4,6 +4,7 @@ import (
 	"backend/common"
 	"backend/connectors"
 	"backend/core"
+	"backend/projects"
 	"backend/release"
 	"database/sql"
 	"fmt"
@@ -24,6 +25,38 @@ func HandleGetConnectionTypes(ctx *core.WebContext) error {
 	}
 
 	return ctx.Sucsess(connectionTypes)
+}
+
+func HandleGetDatabaseStructure(ctx *core.WebContext) error {
+	_, err := ctx.GetUserId()
+	if err != nil {
+		return err
+	}
+
+	var dba projects.DatabaseAuth
+
+	if err := ctx.Bind(&dba); err != nil {
+		return ctx.BadRequest("invalid input")
+	}
+
+	dbTypeVal, ok := dba.DatabaseAuth["type"]
+	if !ok || dbTypeVal == "" {
+		return ctx.BadRequest("database type is required")
+	}
+
+	_, connector, err := CreateDatabaseClient(dbTypeVal, dba.DatabaseAuth)
+	if err != nil {
+		fmt.Println("test")
+		return ctx.InternalError(err.Error())
+	}
+
+	structure, err := connector.GetDatabaseStructure()
+	if err != nil {
+		fmt.Println("test 22")
+		return ctx.InternalError(err.Error())
+	}
+
+	return ctx.Sucsess(structure)
 }
 
 func HandleUpgrade(ctx *core.WebContext) error {
@@ -78,7 +111,6 @@ func Upgrade(ctx *core.WebContext, id int) error {
 		fmt.Println("Connection error:", err)
 		return err
 	}
-	defer db.Close()
 
 	_, err = GetDatabaseVersion(db, connector)
 	if err != nil {
@@ -87,7 +119,7 @@ func Upgrade(ctx *core.WebContext, id int) error {
 
 	for _, version := range versionsSinceLatestRelease {
 		fmt.Println("Execute Script: " + version.Up.Script)
-		connector.ExecuteQuery(db, version.Up.Script)
+		connector.ExecuteQuery(version.Up.Script)
 	}
 
 	return nil
@@ -96,7 +128,7 @@ func Upgrade(ctx *core.WebContext, id int) error {
 func GetDatabaseVersion(db *sql.DB, connector connectors.DBConnector) (string, error) {
 	var version string
 
-	res, err := connector.ExecuteQuery(db, connector.GetVersionQuery())
+	res, err := connector.ExecuteQuery(connector.GetVersionQuery())
 	if err != nil {
 		return version, err
 	}

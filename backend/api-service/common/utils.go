@@ -18,20 +18,41 @@ func GetConnector(connectionType string, authData map[string]string) (connectors
 			authData["password"],
 			authData["databaseName"],
 		)
-
-		connector = connectors.PostgresConnector{
+		connector = &connectors.PostgresConnector{
+			Client:           nil,
 			ConnectionString: connectionString,
 		}
+
 	case "mysql":
-		connector = connectors.MySQLConnector{
-			ConnectionString: "user:password@tcp(localhost:3306)/mydb",
+		connectionString := fmt.Sprintf(
+			"%s:%s@tcp(%s:%s)/%s",
+			authData["username"],
+			authData["password"],
+			authData["host"],
+			authData["port"],
+			authData["databaseName"],
+		)
+		connector = &connectors.MySQLConnector{
+			Client:           nil,
+			ConnectionString: connectionString,
 		}
+
 	case "mssql":
-		connector = connectors.MSSQLConnector{
-			ConnectionString: "sqlserver://user:password@localhost:1433?database=mydb",
+		connectionString := fmt.Sprintf(
+			"sqlserver://%s:%s@%s:%s?database=%s",
+			authData["username"],
+			authData["password"],
+			authData["host"],
+			authData["port"],
+			authData["databaseName"],
+		)
+		connector = &connectors.MSSQLConnector{
+			Client:           nil,
+			ConnectionString: connectionString,
 		}
+
 	default:
-		return connector, fmt.Errorf("unsupported connection type")
+		return nil, fmt.Errorf("unsupported connection type: %s", connectionType)
 	}
 
 	return connector, nil

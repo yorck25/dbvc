@@ -50,6 +50,7 @@ func main() {
 
 	app.GET("/upgrade", worker.HandleUpgrade)
 	app.GET("/connection-types", worker.HandleGetConnectionTypes)
+	app.POST("/get-database-structure", worker.HandleGetDatabaseStructure)
 
 	app.Logger.Fatal(app.Start("0.0.0.0:8080"))
 }
