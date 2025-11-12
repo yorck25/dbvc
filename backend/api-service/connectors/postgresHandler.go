@@ -2,50 +2,93 @@ package connectors
 
 import (
 	"database/sql"
+	"encoding/json"
 	"fmt"
 
-	_ "github.com/denisenkom/go-mssqldb"
-	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
 )
 
-func (p *PostgresConnector) Connect() (*sql.DB, error) {
+func (p *PostgresConnector) Connect(connectionString string) (*sql.DB, error) {
 	fmt.Println("Connecting to PostgreSQL...")
-	db, err := sql.Open("postgres", p.ConnectionString)
+	db, err := sql.Open("postgres", connectionString)
 	if err != nil {
 		return nil, err
 	}
-
-	p.Client = db
-
-	return db, db.Ping()
+	if err := db.Ping(); err != nil {
+		db.Close()
+		return nil, err
+	}
+	return db, nil
 }
 
-func (p PostgresConnector) Disconnect() error {
-	err := p.Client.Close()
-	return err
-}
+func (p *PostgresConnector) BuildConnectionString(projectID int, metaDB *sql.DB) (string, error) {
+	query := `
+		SELECT database_auth
+		FROM project_credentials
+		WHERE project_id = $1
+	`
+	var authJSON string
+	if err := metaDB.QueryRow(query, projectID).Scan(&authJSON); err != nil {
+		return "", err
+	}
 
-func (p PostgresConnector) ExecuteQuery(query string) (*sql.Rows, error) {
-	return p.Client.Query(query)
+	var auth DatabaseAuth
+	if err := json.Unmarshal([]byte(authJSON), &auth); err != nil {
+		return "", fmt.Errorf("failed to parse database_auth JSON: %v", err)
+	}
+
+	connectionString := fmt.Sprintf(
+		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
+		auth.DatabaseAuth["Host"],
+		auth.DatabaseAuth["Port"],
+		auth.DatabaseAuth["Username"],
+		auth.DatabaseAuth["Password"],
+		auth.DatabaseAuth["Database"],
+	)
+	return connectionString, nil
 }
 
 func (p PostgresConnector) GetVersionQuery() string {
 	return "SELECT version();"
 }
 
-func (m PostgresConnector) GetDatabaseStructure() (*DatabaseStructureResponse, error) {
+func (p *PostgresConnector) ExecuteQuery(projectID int, query string) (*sql.Rows, error) {
+	conStr, err := p.BuildConnectionString(projectID, p.MetaDataClient)
+	if err != nil {
+		return nil, err
+	}
+
+	db, err := p.Connect(conStr)
+	if err != nil {
+		return nil, err
+	}
+	defer db.Close()
+	return db.Query(query)
+}
+
+func (p *PostgresConnector) GetDatabaseStructure(projectID int) (*DatabaseStructureResponse, error) {
+	conStr, err := p.BuildConnectionString(projectID, p.MetaDataClient)
+	if err != nil {
+		return nil, err
+	}
+
+	db, err := p.Connect(conStr)
+	if err != nil {
+		return nil, err
+	}
+	defer db.Close()
+
 	query := `
         SELECT
-            TABLE_SCHEMA,
-            TABLE_NAME,
-            COLUMN_NAME,
-            DATA_TYPE
-        FROM INFORMATION_SCHEMA.COLUMNS
-        ORDER BY TABLE_SCHEMA, TABLE_NAME, ORDINAL_POSITION;
+            table_schema,
+            table_name,
+            column_name,
+            data_type
+        FROM information_schema.columns
+        ORDER BY table_schema, table_name, ordinal_position;
     `
 
-	rows, err := m.Client.Query(query)
+	rows, err := db.Query(query)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +120,6 @@ func (m PostgresConnector) GetDatabaseStructure() (*DatabaseStructureResponse, e
 		}
 
 		schema := schemaMap[schemaName]
-
 		if _, ok := schema.Tables[tableName]; !ok {
 			schema.Tables[tableName] = &TableMap{
 				TableName: tableName,
@@ -85,9 +127,7 @@ func (m PostgresConnector) GetDatabaseStructure() (*DatabaseStructureResponse, e
 			}
 		}
 
-		table := schema.Tables[tableName]
-
-		table.Columns = append(table.Columns, ColumnStructureResponse{
+		schema.Tables[tableName].Columns = append(schema.Tables[tableName].Columns, ColumnStructureResponse{
 			ColumnName: columnName,
 			DataType:   dataType,
 		})
@@ -97,23 +137,18 @@ func (m PostgresConnector) GetDatabaseStructure() (*DatabaseStructureResponse, e
 		return nil, err
 	}
 
-	response := DatabaseStructureResponse{
-		Schemas: []SchemaStructureResponse{},
-	}
-
+	response := DatabaseStructureResponse{}
 	for _, schema := range schemaMap {
 		schemaResponse := SchemaStructureResponse{
 			SchemaName: schema.SchemaName,
 			Tables:     []TableStructureResponse{},
 		}
-
 		for _, table := range schema.Tables {
 			schemaResponse.Tables = append(schemaResponse.Tables, TableStructureResponse{
 				TableName: table.TableName,
 				Columns:   table.Columns,
 			})
 		}
-
 		response.Schemas = append(response.Schemas, schemaResponse)
 	}
 

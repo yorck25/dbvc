@@ -5,26 +5,30 @@ import (
 )
 
 type DBConnector interface {
-	Connect() (*sql.DB, error)
+	Connect(connectionString string) (*sql.DB, error)
 	Disconnect() error
-
-	ExecuteQuery(string) (*sql.Rows, error)
+	ExecuteQuery(projectID int, query string) (*sql.Rows, error)
 	GetVersionQuery() string
-	GetDatabaseStructure() (*DatabaseStructureResponse, error)
+	GetDatabaseStructure(projectID int) (*DatabaseStructureResponse, error)
+	BuildConnectionString(projectID int, metaDB *sql.DB) (string, error)
+}
+
+type DatabaseAuth struct {
+	DatabaseAuth map[string]string `json:"databaseAuth"`
 }
 
 type PostgresConnector struct {
-	Client           *sql.DB
+	MetaDataClient   *sql.DB
 	ConnectionString string
 }
 
 type MySQLConnector struct {
-	Client           *sql.DB
+	MetaDataClient   *sql.DB
 	ConnectionString string
 }
 
 type MSSQLConnector struct {
-	Client           *sql.DB
+	MetaDataClient   *sql.DB
 	ConnectionString string
 }
 

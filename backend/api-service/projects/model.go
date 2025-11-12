@@ -45,7 +45,3 @@ type ProjectWithUsers struct {
 	Project Projects                `json:"project"`
 	Users   UsersForProjectResponse `json:"users"`
 }
-
-type DatabaseAuth struct {
-	DatabaseAuth map[string]string `json:"databaseAuth"`
-}

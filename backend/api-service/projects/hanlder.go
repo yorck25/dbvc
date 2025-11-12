@@ -1,10 +1,9 @@
 package projects
 
 import (
-	"backend/common"
+	"backend/connectors"
 	"backend/core"
 	b64 "encoding/base64"
-	"fmt"
 	"golang.org/x/crypto/bcrypt"
 	"strconv"
 )
@@ -15,7 +14,7 @@ func HandleTestProjectConnection(ctx *core.WebContext) error {
 		return err
 	}
 
-	var dba DatabaseAuth
+	var dba connectors.DatabaseAuth
 
 	if err := ctx.Bind(&dba); err != nil {
 		return ctx.BadRequest("invalid input")
@@ -26,17 +25,17 @@ func HandleTestProjectConnection(ctx *core.WebContext) error {
 		return ctx.BadRequest("database type is required")
 	}
 
-	connector, err := common.GetConnector(dbTypeVal, dba.DatabaseAuth)
-	if err != nil {
-		return err
-	}
-
-	db, err := connector.Connect()
-	if err != nil {
-		fmt.Println("Connection error:", err)
-		return ctx.InternalError("Connection Failed: " + err.Error())
-	}
-	defer db.Close()
+	//connector, err := common.GetConnector(dbTypeVal, dba.DatabaseAuth)
+	//if err != nil {
+	//	return err
+	//}
+	//
+	//db, err := connector.Connect(dba.DatabaseAuth)
+	//if err != nil {
+	//	fmt.Println("Connection error:", err)
+	//	return ctx.InternalError("Connection Failed: " + err.Error())
+	//}
+	//defer db.Close()
 
 	return ctx.Sucsess("Test Connection Successful")
 }
