@@ -1,4 +1,4 @@
-package worker
+package databaseWorker
 
 type ConnectionType struct {
 	Id          int    `db:"id" json:"id"`

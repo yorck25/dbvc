@@ -2,15 +2,15 @@ package connectors
 
 import (
 	"database/sql"
+	"github.com/jmoiron/sqlx"
 )
 
 type DBConnector interface {
 	Connect(connectionString string) (*sql.DB, error)
-	Disconnect() error
 	ExecuteQuery(projectID int, query string) (*sql.Rows, error)
 	GetVersionQuery() string
 	GetDatabaseStructure(projectID int) (*DatabaseStructureResponse, error)
-	BuildConnectionString(projectID int, metaDB *sql.DB) (string, error)
+	BuildConnectionString(projectID int, metaDB *sqlx.DB) (string, error)
 }
 
 type DatabaseAuth struct {
@@ -18,18 +18,15 @@ type DatabaseAuth struct {
 }
 
 type PostgresConnector struct {
-	MetaDataClient   *sql.DB
-	ConnectionString string
+	MetaDataClient *sqlx.DB
 }
 
 type MySQLConnector struct {
-	MetaDataClient   *sql.DB
-	ConnectionString string
+	MetaDataClient *sqlx.DB
 }
 
 type MSSQLConnector struct {
-	MetaDataClient   *sql.DB
-	ConnectionString string
+	MetaDataClient *sqlx.DB
 }
 
 type DatabaseStructureResponse struct {

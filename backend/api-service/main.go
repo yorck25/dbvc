@@ -2,12 +2,11 @@ package main
 
 import (
 	"backend/core"
+	"backend/databaseWorker"
 	"backend/projects"
 	"backend/release"
 	"backend/user"
 	"backend/version"
-	"backend/worker"
-
 	"github.com/labstack/echo/v4/middleware"
 )
 
@@ -24,33 +23,40 @@ func main() {
 	}
 
 	app.Use(middleware.CORSWithConfig(middleware.DefaultCORSConfig))
+	mainRoot := app.Group("/api/v1")
+	workerRoot := app.Group("/api/v1/database-worker")
+	workerRoot.Use(core.WorkerMiddleware(app.Ctx.GetDb()))
 
-	app.GET("/", defaultUrl)
-	app.GET("/health", healthUrl)
+	//---------------------------------
+	// MAIN ROUTES
+	//---------------------------------
+	mainRoot.GET("/", defaultUrl)
+	mainRoot.GET("/health", healthUrl)
 
-	app.POST("/auth/login", user.HandleLogin)
-	app.POST("/auth/register", user.HandleRegister)
-	app.GET("/auth/me", user.HandleGetProfile)
+	mainRoot.POST("/auth/login", user.HandleLogin)
+	mainRoot.POST("/auth/register", user.HandleRegister)
+	mainRoot.GET("/auth/me", user.HandleGetProfile)
 
-	app.GET("/users/search", user.HandleSearchMembers)
+	mainRoot.GET("/users/search", user.HandleSearchMembers)
 
-	app.GET("/projects", projects.GetAllProjectsWithUsersForUser)
-	app.GET("/projects/all", projects.HandleGetAllProjects)
-	app.GET("/projects/active", projects.HandleGetActiveProjects)
-	app.GET("/projects/:id", projects.HandleGetProjectByID)
-	app.POST("/projects", projects.HandleCreateProject)
-	app.PUT("/projects/:id", projects.HandleUpdateProject)
-	app.DELETE("/projects/:id", projects.HandleDeleteProject)
-	app.POST("/projects/test-connection", projects.HandleTestProjectConnection)
+	mainRoot.GET("/projects", projects.GetAllProjectsWithUsersForUser)
+	mainRoot.GET("/projects/all", projects.HandleGetAllProjects)
+	mainRoot.GET("/projects/active", projects.HandleGetActiveProjects)
+	mainRoot.GET("/projects/:id", projects.HandleGetProjectByID)
+	mainRoot.POST("/projects", projects.HandleCreateProject)
+	mainRoot.PUT("/projects/:id", projects.HandleUpdateProject)
+	mainRoot.DELETE("/projects/:id", projects.HandleDeleteProject)
+	mainRoot.POST("/projects/test-connection", projects.HandleTestProjectConnection)
 
-	app.GET("/release/project/all", release.HandleGetReleasesForProject)
-	app.GET("/release/project/latest", release.HandleGetLatestReleasesForProject)
+	mainRoot.GET("/release/project/all", release.HandleGetReleasesForProject)
+	mainRoot.GET("/release/project/latest", release.HandleGetLatestReleasesForProject)
 
-	app.POST("/version/table/create", version.HandleCreateTable)
+	mainRoot.POST("/version/table/create", version.HandleCreateTable)
 
-	app.GET("/upgrade", worker.HandleUpgrade)
-	app.GET("/connection-types", worker.HandleGetConnectionTypes)
-	app.POST("/get-database-structure", worker.HandleGetDatabaseStructure)
+	//---------------------------------
+	// WORKER ROUTES
+	//---------------------------------
+	workerRoot.GET("/db-version", databaseWorker.HandleGetDatabaseVersion)
 
 	app.Logger.Fatal(app.Start("0.0.0.0:8080"))
 }

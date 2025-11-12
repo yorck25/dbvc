@@ -65,18 +65,27 @@ func wrapHandler(h HandlerFunc) echo.HandlerFunc {
 	}
 }
 
-func (a *App) GET(path string, h HandlerFunc, m ...echo.MiddlewareFunc) *echo.Route {
-	return a.Add(http.MethodGet, path, wrapHandler(h), m...)
+func (a *App) Group(prefix string, m ...echo.MiddlewareFunc) *Group {
+	g := a.Echo.Group(prefix, m...)
+	return &Group{Group: g}
 }
 
-func (a *App) POST(path string, h HandlerFunc, m ...echo.MiddlewareFunc) *echo.Route {
-	return a.Add(http.MethodPost, path, wrapHandler(h), m...)
+type Group struct {
+	*echo.Group
 }
 
-func (a *App) PUT(path string, h HandlerFunc, m ...echo.MiddlewareFunc) *echo.Route {
-	return a.Add(http.MethodPut, path, wrapHandler(h), m...)
+func (g *Group) GET(path string, h HandlerFunc, m ...echo.MiddlewareFunc) *echo.Route {
+	return g.Add(http.MethodGet, path, wrapHandler(h), m...)
 }
 
-func (a *App) DELETE(path string, h HandlerFunc, m ...echo.MiddlewareFunc) *echo.Route {
-	return a.Add(http.MethodDelete, path, wrapHandler(h), m...)
+func (g *Group) POST(path string, h HandlerFunc, m ...echo.MiddlewareFunc) *echo.Route {
+	return g.Add(http.MethodPost, path, wrapHandler(h), m...)
+}
+
+func (g *Group) PUT(path string, h HandlerFunc, m ...echo.MiddlewareFunc) *echo.Route {
+	return g.Add(http.MethodPut, path, wrapHandler(h), m...)
+}
+
+func (g *Group) DELETE(path string, h HandlerFunc, m ...echo.MiddlewareFunc) *echo.Route {
+	return g.Add(http.MethodDelete, path, wrapHandler(h), m...)
 }

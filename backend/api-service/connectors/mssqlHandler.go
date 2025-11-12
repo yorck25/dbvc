@@ -2,8 +2,10 @@ package connectors
 
 import (
 	"database/sql"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"github.com/jmoiron/sqlx"
 
 	_ "github.com/denisenkom/go-mssqldb"
 )
@@ -21,10 +23,10 @@ func (m *MSSQLConnector) Connect(connectionString string) (*sql.DB, error) {
 	return db, nil
 }
 
-func (m *MSSQLConnector) BuildConnectionString(projectID int, metaDB *sql.DB) (string, error) {
+func (m *MSSQLConnector) BuildConnectionString(projectID int, metaDB *sqlx.DB) (string, error) {
 	query := `
 		SELECT database_auth
-		FROM project_credentials
+		FROM projects_credentials
 		WHERE project_id = $1
 	`
 	var authJSON string
@@ -33,18 +35,30 @@ func (m *MSSQLConnector) BuildConnectionString(projectID int, metaDB *sql.DB) (s
 	}
 
 	var auth DatabaseAuth
-	if err := json.Unmarshal([]byte(authJSON), &auth); err != nil {
+	if err := json.Unmarshal([]byte(authJSON), &auth.DatabaseAuth); err != nil {
 		return "", fmt.Errorf("failed to parse database_auth JSON: %v", err)
+	}
+
+	decode := func(s string) string {
+		if s == "" {
+			return ""
+		}
+		data, err := base64.StdEncoding.DecodeString(s)
+		if err != nil {
+			return s
+		}
+		return string(data)
 	}
 
 	connectionString := fmt.Sprintf(
 		"sqlserver://%s:%s@%s:%s?database=%s",
-		auth.DatabaseAuth["Host"],
-		auth.DatabaseAuth["Port"],
-		auth.DatabaseAuth["Username"],
-		auth.DatabaseAuth["Password"],
-		auth.DatabaseAuth["Database"],
+		decode(auth.DatabaseAuth["Username"]),
+		decode(auth.DatabaseAuth["Password"]),
+		decode(auth.DatabaseAuth["Host"]),
+		decode(auth.DatabaseAuth["Port"]),
+		decode(auth.DatabaseAuth["databaseName"]),
 	)
+
 	return connectionString, nil
 }
 

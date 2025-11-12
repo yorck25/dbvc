@@ -2,8 +2,10 @@ package connectors
 
 import (
 	"database/sql"
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"github.com/jmoiron/sqlx"
 
 	_ "github.com/lib/pq"
 )
@@ -21,10 +23,10 @@ func (p *PostgresConnector) Connect(connectionString string) (*sql.DB, error) {
 	return db, nil
 }
 
-func (p *PostgresConnector) BuildConnectionString(projectID int, metaDB *sql.DB) (string, error) {
+func (p *PostgresConnector) BuildConnectionString(projectID int, metaDB *sqlx.DB) (string, error) {
 	query := `
 		SELECT database_auth
-		FROM project_credentials
+		FROM projects_credentials
 		WHERE project_id = $1
 	`
 	var authJSON string
@@ -33,18 +35,32 @@ func (p *PostgresConnector) BuildConnectionString(projectID int, metaDB *sql.DB)
 	}
 
 	var auth DatabaseAuth
-	if err := json.Unmarshal([]byte(authJSON), &auth); err != nil {
+	if err := json.Unmarshal([]byte(authJSON), &auth.DatabaseAuth); err != nil {
 		return "", fmt.Errorf("failed to parse database_auth JSON: %v", err)
 	}
 
+	decode := func(s string) string {
+		if s == "" {
+			return ""
+		}
+		data, err := base64.StdEncoding.DecodeString(s)
+		if err != nil {
+			return s
+		}
+		return string(data)
+	}
+
+	host := decode(auth.DatabaseAuth["host"])
+	port := decode(auth.DatabaseAuth["port"])
+	username := decode(auth.DatabaseAuth["username"])
+	password := decode(auth.DatabaseAuth["password"])
+	database := decode(auth.DatabaseAuth["databaseName"])
+
 	connectionString := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
-		auth.DatabaseAuth["Host"],
-		auth.DatabaseAuth["Port"],
-		auth.DatabaseAuth["Username"],
-		auth.DatabaseAuth["Password"],
-		auth.DatabaseAuth["Database"],
+		host, port, username, password, database,
 	)
+
 	return connectionString, nil
 }
 
