@@ -29,14 +29,14 @@ type AppContext struct {
 func (c *WebContext) GetUserId() (int, error) {
 	authHeader := c.Request().Header.Get("Authorization")
 	if !strings.HasPrefix(authHeader, "Bearer ") {
-		return 0, c.BadRequest(errors.New("no Bearer token found in Authorization header").Error())
+		return 0, errors.New("no Bearer token found in Authorization header")
 	}
 
 	tokenString := strings.TrimPrefix(authHeader, "Bearer ")
 
 	userId, err := auth.DecodeToken(tokenString, c.config.JwtSecretKey)
 	if err != nil {
-		return 0, c.Unauthorized(err.Error())
+		return 0, err
 	}
 
 	return userId, nil

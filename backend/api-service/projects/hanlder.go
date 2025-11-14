@@ -11,7 +11,7 @@ import (
 func HandleTestProjectConnection(ctx *core.WebContext) error {
 	_, err := ctx.GetUserId()
 	if err != nil {
-		return err
+		return ctx.Unauthorized(err.Error())
 	}
 
 	var dba connectors.DatabaseAuth
@@ -43,7 +43,7 @@ func HandleTestProjectConnection(ctx *core.WebContext) error {
 func HandleCreateProject(ctx *core.WebContext) error {
 	userID, err := ctx.GetUserId()
 	if err != nil {
-		return err
+		return ctx.Unauthorized(err.Error())
 	}
 
 	var cpr CreateProjectRequest
@@ -97,7 +97,7 @@ func HandleCreateProject(ctx *core.WebContext) error {
 func HandleGetAllProjects(ctx *core.WebContext) error {
 	_, err := ctx.GetUserId()
 	if err != nil {
-		return err
+		return ctx.Unauthorized(err.Error())
 	}
 
 	repo := NewRepository(ctx)
@@ -111,7 +111,7 @@ func HandleGetAllProjects(ctx *core.WebContext) error {
 func HandleGetProjectByID(ctx *core.WebContext) error {
 	_, err := ctx.GetUserId()
 	if err != nil {
-		return err
+		return ctx.Unauthorized(err.Error())
 	}
 
 	idParam := ctx.Param("id")
@@ -132,7 +132,7 @@ func HandleGetProjectByID(ctx *core.WebContext) error {
 func HandleUpdateProject(ctx *core.WebContext) error {
 	_, err := ctx.GetUserId()
 	if err != nil {
-		return err
+		return ctx.Unauthorized(err.Error())
 	}
 
 	idParam := ctx.Param("id")
@@ -158,7 +158,7 @@ func HandleUpdateProject(ctx *core.WebContext) error {
 func HandleDeleteProject(ctx *core.WebContext) error {
 	_, err := ctx.GetUserId()
 	if err != nil {
-		return err
+		return ctx.Unauthorized(err.Error())
 	}
 
 	idParam := ctx.Param("id")
@@ -178,7 +178,7 @@ func HandleDeleteProject(ctx *core.WebContext) error {
 func HandleGetActiveProjects(ctx *core.WebContext) error {
 	_, err := ctx.GetUserId()
 	if err != nil {
-		return err
+		return ctx.Unauthorized(err.Error())
 	}
 
 	repo := NewRepository(ctx)
@@ -192,7 +192,7 @@ func HandleGetActiveProjects(ctx *core.WebContext) error {
 func GetAllProjectsWithUsersForUser(ctx *core.WebContext) error {
 	userID, err := ctx.GetUserId()
 	if err != nil {
-		return err
+		return ctx.Unauthorized(err.Error())
 	}
 
 	repo := NewRepository(ctx)

@@ -109,7 +109,7 @@ func HandleLogin(ctx *core.WebContext) error {
 func HandleGetProfile(ctx *core.WebContext) error {
 	userID, err := ctx.GetUserId()
 	if err != nil {
-		return err
+		return ctx.Unauthorized(err.Error())
 	}
 
 	repo := NewRepository(ctx)
@@ -124,7 +124,7 @@ func HandleGetProfile(ctx *core.WebContext) error {
 func HandleUpdateProfile(ctx *core.WebContext) error {
 	userID, err := ctx.GetUserId()
 	if err != nil {
-		return err
+		return ctx.Unauthorized(err.Error())
 	}
 
 	var req UpdateProfileRequest
@@ -158,7 +158,7 @@ func HandleUpdateProfile(ctx *core.WebContext) error {
 func HandleChangePassword(ctx *core.WebContext) error {
 	userID, err := ctx.GetUserId()
 	if err != nil {
-		return err
+		return ctx.Unauthorized(err.Error())
 	}
 
 	var req ChangePasswordRequest

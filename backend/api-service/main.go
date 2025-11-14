@@ -1,6 +1,7 @@
 package main
 
 import (
+	"backend/config"
 	"backend/core"
 	"backend/databaseWorker"
 	"backend/projects"
@@ -32,6 +33,8 @@ func main() {
 	//---------------------------------
 	mainRoot.GET("/", defaultUrl)
 	mainRoot.GET("/health", healthUrl)
+
+	mainRoot.GET("/config/connection-types", config.HandleGetConnectionTypes)
 
 	mainRoot.POST("/auth/login", user.HandleLogin)
 	mainRoot.POST("/auth/register", user.HandleRegister)
