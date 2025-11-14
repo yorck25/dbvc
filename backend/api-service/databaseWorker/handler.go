@@ -36,3 +36,27 @@ func HandleGetDatabaseVersion(ctx *core.WebContext) error {
 
 	return ctx.Sucsess(map[string]string{"version": version})
 }
+
+func HandleGetDatabaseStructure(ctx *core.WebContext) error {
+	connInterface := ctx.Get("db_connector")
+	if connInterface == nil {
+		return ctx.InternalError("database connector not found")
+	}
+	conn, ok := connInterface.(connectors.DBConnector)
+	if !ok {
+		return ctx.InternalError("invalid connector type")
+	}
+
+	projectIDVal := ctx.Get("project_id")
+	projectID, ok := projectIDVal.(int)
+	if !ok {
+		return ctx.InternalError("invalid project_id")
+	}
+
+	structure, err := conn.GetDatabaseStructure(projectID)
+	if err != nil {
+		return ctx.InternalError(err.Error())
+	}
+
+	return ctx.Sucsess(structure)
+}

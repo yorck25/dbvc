@@ -57,6 +57,7 @@ func main() {
 	// WORKER ROUTES
 	//---------------------------------
 	workerRoot.GET("/db-version", databaseWorker.HandleGetDatabaseVersion)
+	workerRoot.GET("/db-structure", databaseWorker.HandleGetDatabaseStructure)
 
 	app.Logger.Fatal(app.Start("0.0.0.0:8080"))
 }
