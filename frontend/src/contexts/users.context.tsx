@@ -2,6 +2,9 @@ import {createContext, useContext, useState, type Dispatch, type FC, type ReactN
 import type {StateUpdater} from "preact/hooks";
 import {NetworkAdapter, setAuthHeader} from "../lib/networkAdapter.tsx";
 import type {IMemberRequest} from "../models/user.models.ts";
+import {BASE_API_URL} from "../lib/variables.ts";
+
+const API_BASE_URL = BASE_API_URL;
 
 interface IUserContext {
     users: string[];
@@ -24,7 +27,7 @@ export const UserContextProvider: FC<{ children: ReactNode }> = ({children}) => 
             headers: headers,
         }
 
-        const res: Response = await fetch(`http://localhost:8080/users/search?query=${searchValue}`, requestOptions)
+        const res: Response = await fetch(`${API_BASE_URL}/users/search?query=${searchValue}`, requestOptions)
         const result: IMemberRequest[] = await res.json();
         return result;
     }

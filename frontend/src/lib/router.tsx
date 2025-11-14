@@ -9,6 +9,7 @@ import {useEffect} from "react";
 import {useAppContext} from "../contexts/app.context.tsx";
 import {ProjectDashboard} from "../pages/projectDashboard";
 import {DatabaseBrowser} from "../components/databaseBrowser";
+import {DatabaseWorkerContextProvider} from "../contexts/databaseWorker.context.tsx";
 
 export const Router = () => {
     const navigate = useNavigate();
@@ -23,7 +24,7 @@ export const Router = () => {
     return (
         <Routes>
             <Route element={<MainLayout/>}>
-                <Route path={"/"} element={<></>} />
+                <Route path={"/"} element={<></>}/>
                 <Route path="/projects" element={<ProjectsPage/>}/>
                 <Route path="/projects/:projectId" element={<ProjectDashboard/>}/>
 
@@ -43,11 +44,13 @@ export const Router = () => {
 export const MainLayout = () => (
     <div className="main">
         <Sidebar/>
-        <ProjectContextProvider>
-            <div className="main_wrapper">
-                <Outlet/>
-            </div>
-        </ProjectContextProvider>
+        <DatabaseWorkerContextProvider>
+            <ProjectContextProvider>
+                <div className="main_wrapper">
+                    <Outlet/>
+                </div>
+            </ProjectContextProvider>
+        </DatabaseWorkerContextProvider>
     </div>
 );
 

@@ -3,7 +3,7 @@ import {AppContextProvider} from "./contexts/app.context";
 import {ProjectContextProvider} from "./contexts/projects.context";
 import {Router} from "./lib/router";
 import {BrowserRouter} from "react-router-dom";
-import {ConnectionTypesContextProvider} from "./contexts/connection-types.context.tsx";
+import {ConfigContextProvider} from "./contexts/connection-types.context.tsx";
 import {UserContextProvider} from "./contexts/users.context.tsx";
 
 export function App() {
@@ -11,7 +11,7 @@ export function App() {
         <AppContextProvider>
             <BrowserRouter>
                 <div className={"main"}>
-                    <ConnectionTypesContextProvider>
+                    <ConfigContextProvider>
                         <UserContextProvider>
                             <ProjectContextProvider>
                                 <div className={"main_wrapper"}>
@@ -19,7 +19,7 @@ export function App() {
                                 </div>
                             </ProjectContextProvider>
                         </UserContextProvider>
-                    </ConnectionTypesContextProvider>
+                    </ConfigContextProvider>
                 </div>
             </BrowserRouter>
         </AppContextProvider>

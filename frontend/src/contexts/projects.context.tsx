@@ -10,6 +10,9 @@ import {
 import type {ICreateProjectRequest, IProjectWithUsers} from "../models/projects.models";
 import {NetworkAdapter, setAuthHeader} from "../lib/networkAdapter.tsx";
 import type {DatabaseAuthData} from "../components/projects/createProjectCredentailsForm/databaseCredentialsForm";
+import {BASE_API_URL} from "../lib/variables.ts";
+
+const API_BASE_URL = BASE_API_URL;
 
 interface IProjectContext {
     projects: IProjectWithUsers[] | undefined;
@@ -39,7 +42,7 @@ export const ProjectContextProvider: FC<{ children: ReactNode }> = ({children}) 
                 headers: myHeaders,
             };
 
-            const res = await fetch("http://localhost:8080/projects", requestOptions);
+            const res = await fetch(`${API_BASE_URL}/projects`, requestOptions);
             if (!res.ok) throw new Error(res.statusText);
 
             const data: IProjectWithUsers[] = await res.json();
@@ -63,7 +66,7 @@ export const ProjectContextProvider: FC<{ children: ReactNode }> = ({children}) 
                 headers: myHeaders,
             };
 
-            const res = await fetch(`http://localhost:8080/projects/${projectId}`, requestOptions);
+            const res = await fetch(`${API_BASE_URL}/projects/${projectId}`, requestOptions);
             if (!res.ok) throw new Error(res.statusText);
 
             const data: IProjectWithUsers = await res.json();
@@ -94,7 +97,7 @@ export const ProjectContextProvider: FC<{ children: ReactNode }> = ({children}) 
                 body: JSON.stringify(cpr),
             };
 
-            const res = await fetch("http://localhost:8080/projects", requestOptions);
+            const res = await fetch(`${API_BASE_URL}/projects`, requestOptions);
             if (!res.ok) throw new Error(res.statusText);
 
             const data: IProjectWithUsers = await res.json();
@@ -123,7 +126,7 @@ export const ProjectContextProvider: FC<{ children: ReactNode }> = ({children}) 
             body: JSON.stringify(authObj),
         }
 
-        const res = await fetch("http://localhost:8080/projects/test-connection", requestOptions);
+        const res = await fetch(`${API_BASE_URL}/projects/test-connection`, requestOptions);
         return res.ok;
     }
 

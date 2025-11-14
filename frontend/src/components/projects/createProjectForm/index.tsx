@@ -1,6 +1,6 @@
 import styles from "./style.module.scss";
 import {ProjectVisibilityType} from "../../../enums/projects.enum.ts";
-import {useConnectionTypesContext} from "../../../contexts/connection-types.context.tsx";
+import {useConfigContext} from "../../../contexts/connection-types.context.tsx";
 import type {IConnectionType} from "../../../models/connection.models.ts";
 import type {ICreateProjectFormData} from "../../../pages/projects";
 import React from "react";
@@ -12,7 +12,7 @@ export const CreateProjectForm = ({newProjectData, setNewProjectData}: {
     newProjectData: ICreateProjectFormData,
     setNewProjectData: React.Dispatch<React.SetStateAction<ICreateProjectFormData>>;
 }) => {
-    const {connectionTypes} = useConnectionTypesContext();
+    const {connectionTypes} = useConfigContext();
 
     const handleInput = (e: Event) => {
         const target = e.target as HTMLInputElement;

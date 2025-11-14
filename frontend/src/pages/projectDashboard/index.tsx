@@ -7,7 +7,7 @@ import type {IProjectWithUsers} from "../../models/projects.models.ts";
 export const ProjectDashboard = () => {
     const {projectId} = useParams();
     const {projects, getProjectById, ensureProjectLoaded} = useProjectContext();
-    const [currentProject, setCurrentProject] = useState<IProjectWithUsers | undefined>();
+    const [_, setCurrentProject] = useState<IProjectWithUsers | undefined>();
     const [activeTab, setActiveTab] = useState<string>("Overview");
 
 
@@ -26,8 +26,6 @@ export const ProjectDashboard = () => {
                 if (fetched) setCurrentProject(fetched);
             });
         }
-
-        console.log(currentProject);
     }, [projectId, projects]);
 
     const getNavigationItemClass = (id: string) => {

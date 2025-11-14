@@ -7,7 +7,7 @@ import TableBody from "@mui/material/TableBody";
 import type {IProjectWithUsers} from "../../../models/projects.models.ts";
 import TableContainer from "@mui/material/TableContainer";
 import styles from "./style.module.scss";
-import {useConnectionTypesContext} from "../../../contexts/connection-types.context.tsx";
+import {useConfigContext} from "../../../contexts/connection-types.context.tsx";
 import type {IUsersForProjectResponse} from "../../../models/user.models.ts";
 import {useState} from "react";
 import Menu from '@mui/material/Menu';
@@ -17,7 +17,7 @@ import type {TargetedMouseEvent} from "preact";
 import {EllipsisVerticalIcon} from "../../ui/icons";
 
 export const ProjectsTable = ({projects}: { projects: IProjectWithUsers[] }) => {
-    const {connectionTypes} = useConnectionTypesContext();
+    const {connectionTypes} = useConfigContext();
     const navigate = useNavigate();
     let location = useLocation()
 

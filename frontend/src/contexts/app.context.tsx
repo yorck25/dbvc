@@ -8,8 +8,10 @@ import {
     type ReactNode,
 } from "react";
 import type {ILoginRequest, IRegisterRequest, IUser} from "../models/user.models.ts";
-
 import {NetworkAdapter, removeTokenFromStorage, saveTokenInStorage, setAuthHeader} from "../lib/networkAdapter.tsx";
+import {BASE_API_URL} from "../lib/variables.ts";
+
+const API_BASE_URL = BASE_API_URL;
 
 interface IAppContext {
     user: IUser | undefined;
@@ -81,7 +83,7 @@ export const AppContextProvider: FC<{ children: ReactNode }> = ({
                 body: JSON.stringify(rr),
             };
 
-            const response = await fetch("http://localhost:8080/auth/register", requestOptions);
+            const response = await fetch(`${API_BASE_URL}/auth/register`, requestOptions);
 
             if (!response.ok) {
                 console.error(new Error("Network response was not ok"));
@@ -114,8 +116,7 @@ export const AppContextProvider: FC<{ children: ReactNode }> = ({
                 redirect: 'follow',
             }
 
-            const response = await fetch("http://localhost:8080/auth/me", requestOptions);
-
+            const response = await fetch(`${API_BASE_URL}/auth/me`, requestOptions);
             if (!response.ok) {
                 throw new Error("Network response was not ok");
             }
@@ -141,8 +142,7 @@ export const AppContextProvider: FC<{ children: ReactNode }> = ({
                 body: JSON.stringify(lr),
             };
 
-            const response = await fetch("http://localhost:8080/auth/login", requestOptions);
-
+            const response = await fetch(`${API_BASE_URL}/auth/login`, requestOptions);
             if (!response.ok) {
                 console.error(new Error("Network response was not ok"));
                 return false;

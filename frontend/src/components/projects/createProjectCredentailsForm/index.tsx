@@ -1,6 +1,6 @@
 import type {ICreateProjectCredentialsData} from "../../../pages/projects";
 import React from "react";
-import {useConnectionTypesContext} from "../../../contexts/connection-types.context.tsx";
+import {useConfigContext} from "../../../contexts/connection-types.context.tsx";
 import type {IConnectionType} from "../../../models/connection.models.ts";
 import styles from "./style.module.scss";
 import {Input, InputType} from "../../ui/input";
@@ -11,7 +11,7 @@ export const CreateProjectCredentialsForm = ({connectionType, newCredentialsData
     newCredentialsData: ICreateProjectCredentialsData,
     setNewCredentialsData: React.Dispatch<React.SetStateAction<ICreateProjectCredentialsData>>;
 }) => {
-    const {getConnectionTypeById} = useConnectionTypesContext();
+    const {getConnectionTypeById} = useConfigContext();
 
     const connectionTypeObject: IConnectionType | undefined = getConnectionTypeById(Number(connectionType));
     if (!connectionTypeObject) {
